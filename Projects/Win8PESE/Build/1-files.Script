@@ -1,0 +1,2113 @@
+[Main]
+Title=1 - Copy Files
+Type=Plugin
+Author=NightMan, YahooUK, JFX, ChrisR
+Description=(Win8PESE) Make folders and copy all basic files. This step is fundamental to add all needed system files.
+Credits=All credits go to Microsoft for developing this Operating System and to everybody helping on the debugging and improvement of this Plugin.
+Version=090
+Download_Level=0
+Level=1
+Selected=True
+Mandatory=True
+NoWarning=False
+Contact=http://TheOven.org/index.php?board=29.0
+Date=2017.11.22
+Depend=
+Disable=
+Web1=http://w8pese.cwcodes.net/Projects/Win8PESE/Build/1-files.Script
+CertifiedBy=
+Certification=
+HistoryNotes01=
+History042=ChrisR - Win8pese. The old Win7pese history is stored in the section [History]
+History043=ChrisR - Do not copy win8 explorer.exe
+History044=JFX - Require files for Recover tools. ChrisR - Url changed
+History046=ChrisR - Permission Changed for full copy (folowing apply); recurse, and process directories and files.
+History047=ChrisR - Added SmallFull file copy choice. Full, reduced by Full WinSxS and Full resource specific Languages folders.
+History048=ChrisR - Fix Driver Integration
+History049=ChrisR - Fix a wrong test
+History050=ChrisR - Native UEFI support mode for 64 bits building. For 32-bit we'll have to use UEFI CSM mode.
+History051=ChrisR - backward SideBySide controls.resources for all languages
+History052=ChrisR - en-US fallback Improvement
+History053=ChrisR - Diskpart and dependencies moved here
+History054=ChrisR - Grant full access for All users. SideBySide Catalogs folders required for Add-Package
+History055=JFX - Take Ownership
+History056=ChrisR - DirDelete,%TargetDir% complement
+History057=ChrisR - diskcopy for file explorer format
+History058=ChrisR - Display Battery SysTray icon
+History059=ChrisR - Improving macro copy files mui
+History060=ChrisR - Device Enumeration
+History061=ChrisR - Some dependencies added for WinPE-WMI. Jscript added for WinPE-Scripting. Xml components is already full
+History062=ChrisR - All Language Files (Nls) selected by default
+History063=Nobsi - Multitouch support
+History064=ChrisR - Config file created here now instead of Shell & Config
+History065=ChrisR - Startup Repair tool shortcut shouldn't be used directly but it run from Recovery Tools menu. Thanks anshad
+History066=ChrisR - Section RefreshYourPC for Win8.1SE and also for Win8.1PE. Synchronization with Win8.1SE with some cleanup
+History067=ChrisR - Choice between boot.wim taskmgr and the new Win8 taskmgr from Install.wim
+History068=ChrisR - UEFI only for x64 build. Fix Typo Call,Echo
+History069=ChrisR - Copy microsoft-windows-comctl32 - comdlg32 manifest files no longer depends on %OSVersion%
+History070=ChrisR - Bypass Driver Signing. Wow JFX: http://TheOven.org/index.php?topic=866.msg11055#msg11055
+History071=wimb - Install Remote Desktop Device Redirector Bus and Composite Bus Enumerator. Copied at their expected locations
+History072=anshad - Remove "Sources" folder if Recovery Environment not selected for Full or SmallFull Files copy
+History072=wimb - iPXE, wimboot bootmgr.exe must be used instead of bootmgr. wimb post http://www.msfn.org/board/topic/170546-win81se/page-5#entry1069633
+History073=2aCD - Copy some WinSxS folder and manifest with * in the middle Instead of the version number
+History074=ChrisR - Hide User Pinned folder in Quick Launch Toolbar
+History075=ChrisR - embedded - VC++
+History076=ChrisR - Add appPatch\drvmain.sdb the driver compatibility file to fixed USB3
+History076=ChrisR - UEFI also for x86 build, ex: Acer Iconia W510
+History077=ChrisR - Attrib on Desktop Ini Files
+History078=ChrisR - EFI boot menu
+History079=ChrisR - Extract WinRe Wim file with tools\7z.exe 7.34 now
+History080=Lancelot - if,existdir,* workarounded (080)
+History081=ChrisR - Option to Patch winload.exe to bypass drivers signing (for x64 build)
+History082=ChrisR - Change Filecopy \* by Dircopy, Safer.
+History083=Lancelot - Added DU buttons + Compare // Call,DirDeleteE,%TargetDir% // Cosmetics
+History084=ChrisR - Fix copy .mui file en-US fallback in PBoot_CopySys32Mui section. Thanks Atari to have seen this significant bug
+History085=ChrisR -  Add wofadk.sys driver, to use in all WinPE to access the host compressed files of Windows 10 Compact. Thanks JFX
+History086=ChrisR - Add en-US fallback for the copy of Windows\Boot\EFI\%distlang% - Date:2016.03.29
+History087=Lancelot FileCopy * have unicode bug - workaround with DirCopy * bug - nbsp http://TheOven.org/index.php?topic=1724.0 - Date:2016.04.03
+History088=Lancelot - Now Wow64 plugin runs at the end of process. - Date:2016.11.09
+History089=Lancelot - Add [Cache_SCD_Info_Additional_Plugin] - Date:2017.01.31
+History090=Lancelot %ISODir% deprecated - Date:2017.11.22
+
+[Variables]
+%bw%=%BootSRC%\Windows
+%b32%=%BootSRC%\Windows\System32
+%bWow%=%BootSRC%\Windows\SysWOW64
+%iw%=%InstallSRC%\Windows
+%i32%=%InstallSRC%\Windows\System32
+%iWow%=%InstallSRC%\Windows\SysWOW64
+%tw%=%TargetDir%\Windows
+%t32%=%TargetDir%\Windows\System32
+%tWow%=%TargetDir%\Windows\SysWOW64
+%AttribexeFolder%=
+%CmdexeFolder%=
+//-
+CopyLFile=Run,%ScriptFile%,PCopy_LFile
+CopyLFileMui=Run,%ScriptFile%,PCopy_LFileMui
+CopyDir=Run,%ScriptFile%,PCopy_Dir_%version%
+BootCopy=Run,%ScriptFile%,PBoot_Copy
+BootCopyMui=Run,%ScriptFile%,PBoot_CopyMui
+BootCopySys32=Run,%ScriptFile%,PBoot_CopySys32
+BootCopySys32Mui=Run,%ScriptFile%,PBoot_CopySys32Mui
+BootCopySysWoW=Run,%ScriptFile%,PBoot_CopySysWoW
+BootCopySysWoWMui=Run,%ScriptFile%,PBoot_CopySysWoWMui
+InstallCopy=Run,%ScriptFile%,PInstall_Copy
+InstallCopyMui=Run,%ScriptFile%,PInstall_CopyMui
+InstallCopySys32=Run,%ScriptFile%,PInstall_CopySys32
+InstallCopySys32Mui=Run,%ScriptFile%,PInstall_CopySys32Mui
+InstallCopySysWoW=Run,%ScriptFile%,PInstall_CopySysWoW
+InstallCopySysWoWMui=Run,%ScriptFile%,PInstall_CopySysWoWMui
+CopyDesktopIni=Run,%ScriptFile%,P_CopyDesktopIni
+ExtractWinReSys32=Run,%ScriptFile%,PExtractWinReSys32
+ExtractWinReSys32Mui=Run,%ScriptFile%,PExtractWinReSys32Mui
+ExtractWinReWim=Run,%scriptfile%,PExtractWinReWim
+//-
+Require_DriverStore=Run,%ScriptFile%,PRequire_DriverStore
+
+[Interface]
+CopyMode_TextLabel="File Copy:",1,1,10,12,53,18,8,Normal
+CopyMode_ScrollBox=Standard,1,4,72,9,150,21,Standard,SmallFull,Full,_CopyMode_Choice_,True
+HideFull_CheckBox="Hide Process",0,3,232,11,99,18,False
+SmallFull_TextLabel="Full with reduced WinSxS folder and resource specific Languages folders.",0,1,72,32,360,18,8,Normal
+ClearTarget_CheckBox="Clear Target Folder",1,3,9,46,121,18,False
+AllNls_CheckBox="Other Language Files (All Nls)",1,3,9,65,166,18,True
+AllKbd_CheckBox="Add All Keyboards",1,3,9,84,109,18,True
+AddFonts_CheckBox="Add All boot Fonts",1,3,9,103,119,18,True
+NewTaskMgr_CheckBox="Use new Win8 Task Manager",1,3,9,125,175,18,False
+PatchWinload_CheckBox="Patch winload.exe to bypass drivers signing",1,3,9,144,248,18,False
+Custom_CheckBox="Copy Custom Folder",1,3,9,166,125,18,False
+Custom_FileBox=%BaseDir%\Custom\Win8PESE,1,13,25,185,220,20,dir
+CustomOpen_Button=,1,8,249,183,24,24,CustomOpen,opendir.bmp,False,_CustomOpen_,False,"__Open Custom Folder"
+Custom_TextLabel="If selected, all files and subfolders from the selected path will be copied into your build. ",1,1,278,182,220,28,8,Normal
+RecTools_CheckBox="Windows Recovery Environment",1,3,9,219,188,18,True
+pTextBox1="Start Menu folder",1,0,25,257,170,21,"System Tools"
+pTextBox2=Name,1,0,210,257,170,21,"System Recovery"
+Refresh_CheckBox="Add files for Refresh/Reset your PC.",1,3,25,285,361,18,False
+Refresh_TextLabel="Be careful with the Refresh option, there are many messages,#$xeven with the original Windows option.",1,1,44,301,342,28,8,Normal
+pBevel2=pBevel2,1,12,3,214,384,116
+AdmTools_CheckBox="Add Administrative Tools",0,3,365,46,149,18,False
+WebLabel_Plugin="Plugin Page",1,10,338,4,55,18,http://TheOven.org/index.php?board=9
+Button_Download=,1,8,441,21,24,24,DownloadXXX,DoubleJDesignRavenna3dArrowDown0016016.bmp,False,False,_DownloadXXX_,False,"__DOWNLOAD Plugin"
+Button_Upload=,1,8,441,-1,24,24,UploadXXX,BokehliciaCaptivaSoftwareupload0016016.bmp,False,False,_UploadXXX_,False,"__UPLOAD Plugin (Admins Only)"
+Button_CompareEdit=,1,8,463,-1,24,24,CompareEditXXX,AmperossQetto2Move0016016.bmp,False,False,_CompareEditXXX_,False,"__DOWNLOAD and Compare with an Editor"
+
+[CopyMode_Choice]
+System,CURSOR,Wait
+If,%CopyMode_ScrollBox%,Equal,Standard,Begin
+Visible,%HideFull_CheckBox%,False,PERMANENT
+Visible,%AllNls_CheckBox%,True,PERMANENT
+Visible,%AllKbd_CheckBox%,True,PERMANENT
+Visible,%AddFonts_CheckBox%,True,PERMANENT
+//Visible,%AdmTools_CheckBox%,True,PERMANENT
+End
+Else,Begin
+Visible,%HideFull_CheckBox%,True,PERMANENT
+Visible,%AllNls_CheckBox%,False,PERMANENT
+Visible,%AllKbd_CheckBox%,False,PERMANENT
+Visible,%AddFonts_CheckBox%,False,PERMANENT
+//Visible,%AdmTools_CheckBox%,False,PERMANENT
+End
+//-
+If,%CopyMode_ScrollBox%,Equal,SmallFull,Begin
+Visible,%SmallFull_TextLabel%,True,PERMANENT
+End
+Else,Begin
+Visible,%SmallFull_TextLabel%,False,PERMANENT
+End
+System,RefreshInterface
+System,CURSOR,Normal
+
+[Process]
+If,ExistFile,%ProjectTemp%\Basic_PluginCache_Extract.ini,Echo,"Basic PluginCache"
+If,Not,ExistFile,%ProjectTemp%\Basic_PluginCache_Extract.ini,Run,%ScriptFile%,Process_Normal
+
+[Process_Normal]
+Echo,"Processing %ScriptTitle% for %ProjectName%..."
+If,ExistFile,%ProjectTemp%\HostOSTools\Attrib.exe,Set,%AttribexeFolder%,%ProjectTemp%\HostOSTools\
+If,ExistFile,%ProjectTemp%\HostOSTools\cmd.exe,Set,%CmdexeFolder%,%ProjectTemp%\HostOSTools\
+//--
+//ReadENV
+IniRead,%ProjectDir%\script.project,IniVariables,NoWarnRegOverWrite,%NoWarnROW%
+IniRead,%projectdir%\script.project,IniVariables,WIMTool,%WimTools%
+IniRead,%projectdir%\script.project,IniVariables,BootType,%BootType%
+IniRead,%projectdir%\script.project,IniVariables,BootMenu,%BootMenu%
+IniRead,%projectdir%\script.project,IniVariables,BootMenu_Target,%BootMenu_Target%
+IniRead,%projectdir%\script.project,IniVariables,OtherOS_Target,%OtherOS_Target%
+IniRead,%projectdir%\script.project,IniVariables,EfiBootType,%EfiBootType%
+IniRead,%projectdir%\script.project,IniVariables,EfiBootMenu,%EfiBootMenu%
+IniRead,%projectdir%\script.project,IniVariables,EfiBootMenu_Target,%EfiBootMenu_Target%
+IniRead,%projectdir%\script.project,IniVariables,OtherOS_EfiTarget,%OtherOS_EfiTarget%
+//--
+If,%ClearTarget_CheckBox%,Equal,True,Run,%ScriptFile%,ClearTarget
+//--
+Run,%ScriptFile%,MakeDirs
+//--
+If,%CopyMode_ScrollBox%,Equal,Full,run,%ScriptFile%,FileCopyFull
+If,%CopyMode_ScrollBox%,Equal,SmallFull,run,%ScriptFile%,FileCopySmallFull
+If,%CopyMode_ScrollBox%,Equal,Standard,run,%ScriptFile%,FileCopyStandard
+//--
+If,%PatchWinload_CheckBox%%SourceArch%,Equal,Truex64,run,%ScriptFile%,BypassDriverSigning
+//--
+//If,Not,ExistFile,%ES%,FileCreateBlank,%ES%
+//If,Not,ExistFile,%AutoRunFile%,FileCreateBlank,%AutoRunFile%
+If,Not,ExistFile,%PECfg%,Run,%ScriptFile%,CreatePECfg,%PECfg%
+If,Not,ExistFile,%PECfgCD%,Run,%ScriptFile%,CreatePECfg,%PECfgCD%
+If,Not,ExistFile,%target_sys%\winpeshl.ini,FileCreateBlank,%target_sys%\winpeshl.ini
+//--
+If,%CopyMode_ScrollBox%,Equal,Standard,Begin
+// Copy All boot.wim fonts
+If,%AddFonts_CheckBox%,Equal,True,Run,%ScriptFile%,AddFont
+Else,run,%ScriptFile%,StandardFonts
+//--
+If,%AdmTools_CheckBox%,Equal,True,Begin
+// AdmTools_CheckBox False and hidden from interface - May cause duplicate shortcuts with MMC (+adding manual names....) + or unwanted shortcut (eg: Task Scheduler). Better add any adm. tools through mmc plugin.
+If,Not,ExistDir,"%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools",DirMake,"%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools"
+DirCopy,"%InstallSRC%\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools","%TargetDir%\ProgramData\Microsoft\Windows\Start Menu\Programs\"
+End
+End
+run,%ScriptFile%,AsianFonts
+//--
+If,%RecTools_CheckBox%,Equal,True,run,%ScriptFile%,RecTools
+// RefreshYourPC needs files from winre.wim whatever CopyMode_ScrollBox.
+If,%RecTools_CheckBox%%Refresh_CheckBox%,Equal,TrueTrue,run,%ScriptFile%,RefreshYourPC
+//--
+If,%Custom_CheckBox%,Equal,True,Run,%ScriptFile%,Custom
+//--
+Run,%scriptfile%,CreateDesktopIniFiles
+//--
+If,ExistFile,%TargetDir%\Boot\Bootfix.bin,FileDelete,%TargetDir%\Boot\BootFix.bin
+If,ExistFile,%TargetDir%\Boot\Bootfix.bin,Call,FileDelete,%TargetDir%\Boot\BootFix.bin
+//--
+//-- Lancelot tips : no duplicate options in menu.lst
+If,ExistDir,%ProjectCache%\OtherOSMenu,DirDelete,%ProjectCache%\OtherOSMenu
+If,ExistDir,%ProjectCache%\OtherOSMenu,Call,DirDelete,%ProjectCache%\OtherOSMenu
+DirMake,%ProjectCache%\OtherOSMenu
+//--
+If,%BootType%,Equal,MultiBoot,Begin
+If,Not,ExistDir,%BootMenu_Target%,DirMake,%BootMenu_Target%
+If,ExistFile,%BootMenu%,FileDelete,%BootMenu%
+If,ExistFile,%BootMenu%,Call,FileDelete,%BootMenu%
+FileCreateBlank,%BootMenu%
+If,Not,ExistDir,%OtherOS_Target%,DirMake,%OtherOS_Target%
+End
+// for efi boot Menu
+If,Not,ExistDir,%EfiBootMenu_Target%,DirMake,%EfiBootMenu_Target%
+If,ExistFile,%EfiBootMenu%,FileDelete,%EfiBootMenu%
+FileCreateBlank,%EfiBootMenu%
+If,Not,ExistDir,%OtherOS_EfiTarget%,DirMake,%OtherOS_EfiTarget%
+//--
+// Add project's url
+ExtractAllFiles,%ScriptFile%,Icons,%target_sys%
+Add,Url,,"Win8PE SE MSFN.url",http://www.msfn.org/board/topic/161226-win8pe-se/,#$psystemroot#$p\System32\msfn_modrica.ico
+Add,Url,,"Win8PE SE The Oven.url",http://TheOven.org/index.php?board=29.0,#$psystemroot#$p\System32\TheOven.ico
+//--
+Run,%scriptfile%,Process_TimeZone
+//--
+Run,%ScriptFile%,Process_Keyboard
+//--
+Run,%scriptfile%,Process_Format
+//--
+Run,%scriptfile%,Process_Locale
+//--
+If,ExistFile,%ProjectDir%\Build\5-Wow64.script,Exec,%ProjectDir%\Build\5-Wow64.script,Process
+
+[ClearTarget]
+If,ExistDir,%TargetDir%,Call,DirDeleteE,%TargetDir%
+
+[ClearTarget_CANCELLED]
+If,ExistDir,%TargetDir%,Echo,"Deleting [%targetdir%]"
+If,ExistDir,%TargetDir%,DirDelete,%TargetDir%
+If,ExistDir,%TargetDir%,Shellexecute,Hide,%CmdexeFolder%cmd.exe,"/C rd /s /q #$q%TargetDir%#$q"
+If,ExistDir,%TargetDir%,Call,DirDelete,%TargetDir%
+If,ExistDir,%TargetDir%,Call,Echo,"%TargetDir% could not be deleted!",Warn
+If,ExistDir,%TargetDir%,Message,"%TargetDir% could not be deleted!"
+If,ExistDir,%TargetDir%,Halt,"%TargetDir% could not be deleted!"
+
+[MakeDirs]
+Echo,"Making directories .."
+StrFormat,Path,%IsoFile%,%IsoFolder%
+StrFormat,CTrim,%IsoFolder%,\,%IsoFolder%
+If,Not,ExistDir,%IsoFolder%,DirMake,%IsoFolder%
+If,Not,ExistDir,%TargetDir%,DirMake,%TargetDir%
+// Set the NTFS permissions on target folder to Full Control to everyone - this avoids the black screen on boot problem
+ShellExecute,Hide,%Tools%\%OSArch%\SetAcl.exe," -ot #$qfile#$q -on #$q%TargetDir%#$q -actn ace -actn setprot  -op #$qdacl:p_nc#$q  -ace #$qn:S-1-1-0;p:full;s:y#$q"
+If,Not,%ExitCode%,Equal,0,Call,Echo,"SetAcl - NTFS permission on target folder FAIL -> Black Screen on boot",Warn
+//- Attention mkisofs is case sensitive
+If,Not,ExistDir,%targetdir%\Boot,DirMake,%targetdir%\Boot
+If,Not,ExistDir,%targetdir%\Boot\fonts,DirMake,%targetdir%\Boot\fonts
+If,Not,ExistDir,%targetdir%\Boot\%DistLang%,DirMake,%targetdir%\Boot\%DistLang%
+If,ExistDir,%BootSRC%\Boot\en-US,If,Not,ExistDir,%targetdir%\boot\en-US,DirMake,%targetdir%\boot\en-US
+//- Attention mkisofs is case sensitive
+If,Not,ExistDir,%targetdir%\efi\boot,DirMake,%targetdir%\efi\boot
+If,Not,ExistDir,%targetdir%\efi\microsoft\boot\fonts,DirMake,%targetdir%\efi\microsoft\boot\fonts
+If,Not,ExistDir,%targetdir%\efi\microsoft\boot\resources,DirMake,%targetdir%\efi\microsoft\boot\resources
+//-
+If,Not,ExistDir,"%targetdir%\Program Files",DirMake,"%targetdir%\Program Files"
+If,Not,ExistDir,"%targetdir%\Program Files\Common Files\Microsoft Shared",DirMake,"%targetdir%\Program Files\Common Files\Microsoft Shared"
+If,Not,ExistDir,"%targetdir%\Program Files\Internet Explorer",DirMake,"%targetdir%\Program Files\Internet Explorer"
+//-
+If,Not,ExistDir,%targetdir%\ProgramData,DirMake,%targetdir%\ProgramData
+If,Not,ExistDir,%targetdir%\ProgramData\Microsoft\Crypto\DSS\MachineKeys,DirMake,%targetdir%\ProgramData\Microsoft\Crypto\DSS\MachineKeys
+If,Not,ExistDir,%targetdir%\ProgramData\Microsoft\Crypto\Keys,DirMake,%targetdir%\ProgramData\Microsoft\Crypto\Keys
+If,Not,ExistDir,%targetdir%\ProgramData\Microsoft\Crypto\RSA\MachineKeys,DirMake,%targetdir%\ProgramData\Microsoft\Crypto\RSA\MachineKeys
+If,Not,ExistDir,%targetdir%\ProgramData\Microsoft\Network\Connections\Pbk,DirMake,%targetdir%\ProgramData\Microsoft\Network\Connections\Pbk
+If,Not,ExistDir,"%targetdir%\ProgramData\Microsoft\User Account Pictures",DirMake,"%targetdir%\ProgramData\Microsoft\User Account Pictures"
+//If,Not,ExistDir,%targetdir%\ProgramData\Microsoft\Crypto\DSS\MachineKeys,DirMake,%targetdir%\ProgramData\Microsoft\Crypto\DSS\MachineKeys
+//If,Not,ExistDir,%targetdir%\ProgramData\Microsoft\Crypto\Keys,DirMake,%targetdir%\ProgramData\Microsoft\Crypto\Keys
+//If,Not,ExistDir,%targetdir%\ProgramData\Microsoft\Crypto\RSA\MachineKeys,DirMake,%targetdir%\ProgramData\Microsoft\Crypto\RSA\MachineKeys
+If,Not,ExistDir,%targetdir%\ProgramData\Microsoft\Windows\Caches,DirMake,%targetdir%\ProgramData\Microsoft\Windows\Caches
+If,Not,ExistDir,%targetdir%\ProgramData\Microsoft\Windows\DeviceMetadataStore,DirMake,%targetdir%\ProgramData\Microsoft\Windows\DeviceMetadataStore
+//If,Not,ExistDir,%targetdir%\ProgramData\Microsoft\Windows\GameExplorer,DirMake,%targetdir%\ProgramData\Microsoft\Windows\GameExplorer
+If,Not,ExistDir,"%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\Accessories",DirMake,"%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\Accessories"
+//If,Not,ExistDir,"%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools",DirMake,"%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools"
+//If,Not,ExistDir,"%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp",DirMake,"%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp"
+If,Not,ExistDir,"%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\System Tools",DirMake,"%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\System Tools"
+//If,Not,ExistDir,%targetdir%\ProgramData\Microsoft\Windows\Ringtones,DirMake,%targetdir%\ProgramData\Microsoft\Windows\Ringtones
+If,Not,ExistDir,%targetdir%\ProgramData\Microsoft\Windows\Templates,DirMake,%targetdir%\ProgramData\Microsoft\Windows\Templates
+If,Not,ExistDir,%targetdir%\ProgramData\Microsoft\Windows\WER\ReportArchive,DirMake,%targetdir%\ProgramData\Microsoft\Windows\WER\ReportArchive
+If,Not,ExistDir,%targetdir%\ProgramData\Microsoft\Windows\WER\ReportQueue,DirMake,%targetdir%\ProgramData\Microsoft\Windows\WER\ReportQueue
+//-
+If,Not,ExistDir,%targetdir%\Users,DirMake,%targetdir%\Users
+//If,Not,ExistDir,%targetdir%\Users\Default\AppData\Local\Microsoft\Windows\GameExplorer,DirMake,%targetdir%\Users\Default\AppData\Local\Microsoft\Windows\GameExplorer
+If,Not,ExistDir,%targetdir%\Users\Default\AppData\Local\Microsoft\Windows\History,DirMake,%targetdir%\Users\Default\AppData\Local\Microsoft\Windows\History
+If,Not,ExistDir,"%targetdir%\Users\Default\AppData\Local\Microsoft\Windows\Temporary Internet Files",DirMake,"%targetdir%\Users\Default\AppData\Local\Microsoft\Windows\Temporary Internet Files"
+If,Not,ExistDir,%targetdir%\Users\Default\AppData\Local\Microsoft\Windows\WinX\Group1,DirMake,%targetdir%\Users\Default\AppData\Local\Microsoft\Windows\WinX\Group1
+If,Not,ExistDir,%targetdir%\Users\Default\AppData\Local\Microsoft\Windows\WinX\Group2,DirMake,%targetdir%\Users\Default\AppData\Local\Microsoft\Windows\WinX\Group2
+If,Not,ExistDir,%targetdir%\Users\Default\AppData\Local\Microsoft\Windows\WinX\Group3,DirMake,%targetdir%\Users\Default\AppData\Local\Microsoft\Windows\WinX\Group3
+If,Not,ExistDir,%targetdir%\Users\Default\AppData\Local\Temp,DirMake,%targetdir%\Users\Default\AppData\Local\Temp
+If,Not,ExistDir,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch",DirMake,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch"
+// Additional for pins
+If,Not,ExistDir,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\StartMenu",DirMake,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\StartMenu"
+If,Not,ExistDir,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar",DirMake,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar"
+ShellExecute,Hide,%AttribexeFolder%Attrib.exe,"+A +H +S +R #$q%targetdir%\Users\Default\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned#$q"
+ShellExecute,Hide,%AttribexeFolder%Attrib.exe,"+S #$q%targetdir%\Users\Default\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned#$q"
+//-
+If,Not,ExistDir,%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Cookies,DirMake,%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Cookies
+If,Not,ExistDir,%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Libraries,DirMake,%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Libraries
+If,Not,ExistDir,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Network Shortcuts",DirMake,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Network Shortcuts"
+If,Not,ExistDir,%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Recent,DirMake,%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Recent
+If,Not,ExistDir,%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\SendTo,DirMake,%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\SendTo
+If,Not,ExistDir,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Accessories",DirMake,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Accessories"
+//If,Not,ExistDir,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Administrative Tools",DirMake,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Administrative Tools"
+//If,Not,ExistDir,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Maintenance",DirMake,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Maintenance"
+//If,Not,ExistDir,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\StartUp",DirMake,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\StartUp"
+If,Not,ExistDir,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools",DirMake,"%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools"
+If,Not,ExistDir,%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Templates,DirMake,%targetdir%\Users\Default\AppData\Roaming\Microsoft\Windows\Templates
+//-
+If,Not,ExistDir,%targetdir%\Users\Default\Desktop,DirMake,%targetdir%\Users\Default\Desktop
+//If,Not,ExistDir,%targetdir%\Users\Default\Contacts,DirMake,%targetdir%\Users\Default\Contacts
+If,Not,ExistDir,%targetdir%\Users\Default\Documents,DirMake,%targetdir%\Users\Default\Documents
+If,Not,ExistDir,%targetdir%\Users\Default\Downloads,DirMake,%targetdir%\Users\Default\Downloads
+If,Not,ExistDir,%targetdir%\Users\Default\Favorites,DirMake,%targetdir%\Users\Default\Favorites
+If,Not,ExistDir,%targetdir%\Users\Default\Favorites\Links,DirMake,%targetdir%\Users\Default\Favorites\Links
+If,Not,ExistDir,%targetdir%\Users\Default\Links,DirMake,%targetdir%\Users\Default\Links
+If,Not,ExistDir,%targetdir%\Users\Default\Pictures,DirMake,%targetdir%\Users\Default\Pictures
+If,Not,ExistDir,%targetdir%\Users\Default\Music,DirMake,%targetdir%\Users\Default\Music
+//If,Not,ExistDir,"%targetdir%\Users\Default\Saved Games",DirMake,"%targetdir%\Users\Default\Saved Games"
+//If,Not,ExistDir,%targetdir%\Users\Default\Searches,DirMake,%targetdir%\Users\Default\Searches
+If,Not,ExistDir,%targetdir%\Users\Default\Videos,DirMake,%targetdir%\Users\Default\Videos
+//-
+If,Not,ExistDir,%targetdir%\Users\Public\Libraries,DirMake,%targetdir%\Users\Public\Libraries
+If,Not,ExistDir,%targetdir%\Users\Public\Desktop,DirMake,%targetdir%\Users\Public\Desktop
+If,Not,ExistDir,%targetdir%\Users\Public\Documents,DirMake,%targetdir%\Users\Public\Documents
+If,Not,ExistDir,%targetdir%\Users\Public\Downloads,DirMake,%targetdir%\Users\Public\Downloads
+If,Not,ExistDir,%targetdir%\Users\Public\Pictures,DirMake,%targetdir%\Users\Public\Pictures
+If,Not,ExistDir,%targetdir%\Users\Public\Music,DirMake,%targetdir%\Users\Public\Music
+If,Not,ExistDir,%targetdir%\Users\Public\Videos,DirMake,%targetdir%\Users\Public\Videos
+//-
+If,Not,ExistDir,%tw%,DirMake,%tw%
+If,Not,ExistDir,%tw%\%DistLang%,DirMake,%tw%\%DistLang%
+If,ExistDir,%bw%\en-US,If,Not,ExistDir,%tw%\en-US,DirMake,%tw%\en-US
+If,Not,ExistDir,%tw%\appPatch,DirMake,%tw%\appPatch
+If,Not,ExistDir,%tw%\Boot,DirMake,%tw%\Boot
+If,Not,ExistDir,%tw%\Boot\fonts,DirMake,%tw%\Boot\fonts
+If,Not,ExistDir,%tw%\Boot\Resources\%DistLang%,DirMake,%tw%\Boot\Resources\%DistLang%
+If,ExistDir,%bw%\Boot\Resources\en-US,If,Not,ExistDir,%tw%\Boot\Resources\en-US,DirMake,%tw%\Boot\Resources\en-US
+If,Not,ExistDir,%tw%\Boot\EFI,DirMake,%tw%\Boot\EFI
+If,Not,ExistDir,%tw%\Fonts,DirMake,%tw%\Fonts
+If,Not,ExistDir,%tw%\Globalization\Sorting,DirMake,%tw%\Globalization\Sorting
+//If,Not,ExistDir,%tw%\Help,DirMake,%tw%\Help
+If,Not,ExistDir,%tw%\inf,DirMake,%tw%\inf
+//If,Not,ExistDir,%tw%\LiveKernelReports,DirMake,%tw%\LiveKernelReports
+If,Not,ExistDir,%tw%\Logs,DirMake,%tw%\Logs
+//If,Not,ExistDir,%tw%\Microsoft.NET\Framework\v2.0.50727,DirMake,%tw%\Microsoft.NET\Framework\v2.0.50727
+//If,Not,ExistDir,%tw%\PolicyDefinitions\%DistLang%,DirMake,%tw%\PolicyDefinitions\%DistLang%
+//If,ExistDir,%bw%\PolicyDefinitions\en-US,If,Not,ExistDir,%tw%\PolicyDefinitions\en-US,DirMake,%tw%\PolicyDefinitions\en-US
+If,Not,ExistDir,%tw%\Resources\Themes\aero\%DistLang%,DirMake,%tw%\Resources\Themes\aero\%DistLang%
+If,ExistDir,%bw%\Resources\Themes\aero\en-US,If,Not,ExistDir,%tw%\Resources\Themes\aero\en-US,DirMake,%tw%\Resources\Themes\aero\en-US
+If,Not,ExistDir,%tw%\Resources\Themes\aero\VSCache,DirMake,%tw%\Resources\Themes\aero\VSCache
+If,Not,ExistDir,%tw%\schemas\EAPHost,DirMake,%tw%\schemas\EAPHost
+If,Not,ExistDir,%tw%\schemas\EAPMethods,DirMake,%tw%\schemas\EAPMethods
+If,Not,ExistDir,%tw%\schemas\TSWorkSpace,DirMake,%tw%\schemas\TSWorkSpace
+//If,Not,ExistDir,%tw%\security\database,DirMake,%tw%\security\database
+//If,Not,ExistDir,%tw%\security\logs,DirMake,%tw%\security\logs
+//If,Not,ExistDir,%tw%\security\templates,DirMake,%tw%\security\templates
+// Servicing required for drivers integration
+If,Not,ExistDir,%tw%\servicing,DirMake,%tw%\servicing
+If,Not,ExistDir,%tw%\Temp,DirMake,%tw%\Temp
+//If,Not,ExistDir,%tw%\ToastData,DirMake,%tw%\ToastData
+//If,Not,ExistDir,%tw%\tracing,DirMake,%tw%\tracing
+//If,Not,ExistDir,%tw%\Vss\Writers\Application,DirMake,%tw%\Vss\Writers\Application
+//If,Not,ExistDir,%tw%\Vss\Writers\System,DirMake,%tw%\Vss\Writers\System
+If,Not,ExistDir,%tw%\Web\Screen,DirMake,%tw%\Web\Screen
+If,Not,ExistDir,%tw%\Web\Wallpaper\Windows,DirMake,%tw%\Web\Wallpaper\Windows
+If,Not,ExistDir,%tw%\WinSxS,DirMake,%tw%\WinSxS
+//If,Not,ExistDir,%tw%\wpeprofiles,DirMake,%tw%\Wpeprofiles
+//-
+If,Not,ExistDir,%t32%,DirMake,%t32%
+If,Not,ExistDir,%t32%\%DistLang%,DirMake,%t32%\%DistLang%
+If,Not,ExistDir,%t32%\en-US,DirMake,%t32%\en-US
+//If,Not,ExistDir,%t32%\%DistLang%\Licenses,DirMake,%t32%\%DistLang%\Licenses
+//If,ExistDir,%i32%\en-US\Licenses,If,Not,ExistDir,%t32%\en-US\Licenses,DirMake,%t32%\en-US\Licenses
+//If,Not,ExistDir,%t32%\AdvancedInstallers,DirMake,%t32%\AdvancedInstallers
+If,Not,ExistDir,%t32%\Boot\%DistLang%,DirMake,%t32%\Boot\%DistLang%
+If,ExistDir,%b32%\Boot\en-US,If,Not,ExistDir,%t32%\Boot\en-US,DirMake,%t32%\Boot\en-US
+If,Not,ExistDir,%t32%\catroot\{F750E6C3-38EE-11D1-85E5-00C04FC295EE},DirMake,%t32%\catroot\{F750E6C3-38EE-11D1-85E5-00C04FC295EE}
+//If,Not,ExistDir,%t32%\catroot2,DirMake,%t32%\catroot2
+If,Not,ExistDir,%t32%\CodeIntegrity,DirMake,%t32%\CodeIntegrity
+If,Not,ExistDir,%t32%\config,DirMake,%t32%\config
+//If,Not,ExistDir,%t32%\config\systemprofile\AppData\Local,DirMake,%t32%\config\systemprofile\AppData\Local
+//If,Not,ExistDir,%t32%\config\systemprofile\AppData\Roaming,DirMake,%t32%\config\systemprofile\AppData\Roaming
+If,Not,ExistDir,%t32%\dism\%DistLang%,DirMake,%t32%\dism\%DistLang%
+If,ExistDir,%b32%\dism\en-US,If,Not,ExistDir,%t32%\dism\en-US,DirMake,%t32%\dism\en-US
+If,Not,ExistDir,%t32%\drivers,DirMake,%t32%\drivers
+If,Not,ExistDir,%t32%\drivers\%DistLang%,DirMake,%t32%\drivers\%DistLang%
+If,ExistDir,%b32%\drivers\en-US,If,Not,ExistDir,%t32%\drivers\en-US,DirMake,%t32%\drivers\en-US
+If,Not,ExistDir,%t32%\drivers\etc,DirMake,%t32%\drivers\etc
+If,Not,ExistDir,%t32%\drivers\UMDF\%DistLang%,DirMake,%t32%\drivers\UMDF\%DistLang%
+If,ExistDir,%b32%\drivers\UMDF\en-US,If,Not,ExistDir,%t32%\drivers\UMDF\en-US,DirMake,%t32%\drivers\UMDF\en-US
+If,Not,ExistDir,%t32%\driverstore,DirMake,%t32%\driverstore
+If,Not,ExistDir,%t32%\driverstore\%DistLang%,DirMake,%t32%\driverstore\%DistLang%
+If,ExistDir,%b32%\driverstore\en-US,If,Not,ExistDir,%t32%\driverstore\en-US,DirMake,%t32%\driverstore\en-US
+If,Not,ExistDir,%t32%\driverstore\FileRepository,DirMake,%t32%\driverstore\FileRepository
+//If,Not,ExistDir,%t32%\GroupPolicy,DirMake,%t32%\GroupPolicy
+//If,Not,ExistDir,%t32%\GroupPolicyUsers,DirMake,%t32%\GroupPolicyUsers
+//If,Not,ExistDir,%t32%\LogFiles\Firewall,DirMake,%t32%\LogFiles\Firewall
+//If,Not,ExistDir,%t32%\LogFiles\WMI\RtBackup,DirMake,%t32%\LogFiles\WMI\RtBackup
+If,Not,ExistDir,%t32%\migration,DirMake,%t32%\migration
+If,Not,ExistDir,%t32%\migration\%DistLang%,DirMake,%t32%\migration\%DistLang%
+If,ExistDir,%b32%\migration\en-US,If,Not,ExistDir,%t32%\migration\en-US,DirMake,%t32%\migration\en-US
+//If,Not,ExistDir,%t32%\MUI,DirMake,%t32%\MUI
+//If,Not,ExistDir,%t32%\ras,DirMake,%t32%\ras
+//If,Not,ExistDir,%t32%\recovery,DirMake,%t32%\Recovery
+//If,Not,ExistDir,%t32%\restore,DirMake,%t32%\restore
+//If,Not,ExistDir,%t32%\setup\%DistLang%,DirMake,%t32%\setup\%DistLang%
+//If,ExistDir,%b32%\setup\en-US,If,Not,ExistDir,%t32%\setup\en-US,DirMake,%t32%\setup\en-US
+If,Not,ExistDir,%t32%\SMI,DirMake,%t32%\SMI
+//If,Not,ExistDir,%t32%\spp\tokens,DirMake,%t32%\spp\tokens
+//If,Not,ExistDir,%t32%\Sysprep\%DistLang%,DirMake,%t32%\Sysprep\%DistLang%
+//If,ExistDir,%b32%\Sysprep\en-US,If,Not,ExistDir,%t32%\Sysprep\en-US,DirMake,%t32%\Sysprep\en-US
+//If,Not,ExistDir,%t32%\Sysprep\ActionFiles,DirMake,%t32%\Sysprep\ActionFiles
+//If,Not,ExistDir,%t32%\Tasks\Microsoft\Windows,DirMake,%t32%\Tasks\Microsoft\Windows
+If,Not,ExistDir,%t32%\wbem\%DistLang%,DirMake,%t32%\wbem\%DistLang%
+If,ExistDir,%b32%\wbem\en-US,If,Not,ExistDir,%t32%\wbem\en-US,DirMake,%t32%\wbem\en-US
+If,Not,ExistDir,%t32%\wbem\xml,DirMake,%t32%\wbem\xml
+//If,Not,ExistDir,%t32%\wfp,DirMake,%t32%\wfp
+//If,Not,ExistDir,%t32%\WindowsPowerShell\v1.0\Modules\SmbShare,DirMake,%t32%\WindowsPowerShell\v1.0\Modules\SmbShare
+//If,Not,ExistDir,%t32%\winevt\Logs,DirMake,%t32%\winevt\Logs
+//If,Not,ExistDir,%t32%\winevt\TraceFormat,DirMake,%t32%\winevt\TraceFormat
+If,%SourceArch%,Equal,x64,Begin
+If,Not,ExistDir,%tWow%,DirMake,%tWow%
+If,Not,ExistDir,%tWow%\%DistLang%,DirMake,%tWow%\%DistLang%
+If,ExistDir,%bWow%\en-US,If,Not,ExistDir,%tWow%\en-US,DirMake,%tWow%\en-US
+//If,Not,ExistDir,%tWow%\AdvancedInstallers,DirMake,%tWow%\AdvancedInstallers
+If,Not,ExistDir,%tWow%\dism\%DistLang%,DirMake,%tWow%\dism\%DistLang%
+If,ExistDir,%bWow%\dism\en-US,If,Not,ExistDir,%tWow%\dism\en-US,DirMake,%tWow%\dism\en-US
+If,Not,ExistDir,%tWow%\drivers,DirMake,%tWow%\drivers
+//If,Not,ExistDir,%tWow%\migration,DirMake,%tWow%\migration
+If,Not,ExistDir,%tWow%\wbem\%DistLang%,DirMake,%tWow%\wbem\%DistLang%
+If,ExistDir,%bWow%\wbem\en-US,If,Not,ExistDir,%tWow%\wbem\en-US,DirMake,%tWow%\wbem\en-US
+If,Not,ExistDir,%tWow%\wbem\xml,DirMake,%tWow%\wbem\xml
+End
+
+[RemovesFullMuiDir]
+If,Not,%DistLang%,Equal,ar-SA,If,ExistDir,#1\ar-SA,DirDelete,#1\ar-SA
+If,Not,%DistLang%,Equal,bg-BG,If,ExistDir,#1\bg-BG,DirDelete,#1\bg-BG
+If,Not,%DistLang%,Equal,cs-CZ,If,ExistDir,#1\cs-CZ,DirDelete,#1\cs-CZ
+If,Not,%DistLang%,Equal,da-DK,If,ExistDir,#1\da-DK,DirDelete,#1\da-DK
+If,Not,%DistLang%,Equal,de-DE,If,ExistDir,#1\de-DE,DirDelete,#1\de-DE
+If,Not,%DistLang%,Equal,el-GR,If,ExistDir,#1\el-GR,DirDelete,#1\el-GR
+If,Not,%DistLang%,Equal,en-GB,If,ExistDir,#1\en-GB,DirDelete,#1\en-GB
+If,Not,%DistLang%,Equal,es-ES,If,ExistDir,#1\es-ES,DirDelete,#1\es-ES
+If,Not,%DistLang%,Equal,et-EE,If,ExistDir,#1\et-EE,DirDelete,#1\et-EE
+If,Not,%DistLang%,Equal,fi-FI,If,ExistDir,#1\fi-FI,DirDelete,#1\fi-FI
+If,Not,%DistLang%,Equal,fr-FR,If,ExistDir,#1\fr-FR,DirDelete,#1\fr-FR
+If,Not,%DistLang%,Equal,he-IL,If,ExistDir,#1\he-IL,DirDelete,#1\he-IL
+If,Not,%DistLang%,Equal,hr-HR,If,ExistDir,#1\hr-HR,DirDelete,#1\hr-HR
+If,Not,%DistLang%,Equal,hu-HU,If,ExistDir,#1\hu-HU,DirDelete,#1\hu-HU
+If,Not,%DistLang%,Equal,it-IT,If,ExistDir,#1\it-IT,DirDelete,#1\it-IT
+If,Not,%DistLang%,Equal,ja-JP,If,ExistDir,#1\ja-JP,DirDelete,#1\ja-JP
+If,Not,%DistLang%,Equal,ko-KR,If,ExistDir,#1\ko-KR,DirDelete,#1\ko-KR
+If,Not,%DistLang%,Equal,lt-LT,If,ExistDir,#1\lt-LT,DirDelete,#1\lt-LT
+If,Not,%DistLang%,Equal,lv-LV,If,ExistDir,#1\lv-LV,DirDelete,#1\lv-LV
+If,Not,%DistLang%,Equal,nb-NO,If,ExistDir,#1\nb-NO,DirDelete,#1\nb-NO
+If,Not,%DistLang%,Equal,nl-NL,If,ExistDir,#1\nl-NL,DirDelete,#1\nl-NL
+If,Not,%DistLang%,Equal,pl-PL,If,ExistDir,#1\pl-PL,DirDelete,#1\pl-PL
+If,Not,%DistLang%,Equal,pt-BR,If,ExistDir,#1\pt-BR,DirDelete,#1\pt-BR
+If,Not,%DistLang%,Equal,pt-PT,If,ExistDir,#1\pt-PT,DirDelete,#1\pt-PT
+If,Not,%DistLang%,Equal,ro-RO,If,ExistDir,#1\ro-RO,DirDelete,#1\ro-RO
+If,Not,%DistLang%,Equal,ru-RU,If,ExistDir,#1\ru-RU,DirDelete,#1\ru-RU
+If,Not,%DistLang%,Equal,sk-SK,If,ExistDir,#1\sk-SK,DirDelete,#1\sk-SK
+If,Not,%DistLang%,Equal,sl-SI,If,ExistDir,#1\sl-SI,DirDelete,#1\sl-SI
+If,Not,%DistLang%,Equal,sr-Latn-CS,If,ExistDir,#1\sr-Latn-CS,DirDelete,#1\sr-Latn-CS
+If,Not,%DistLang%,Equal,sr-Latn-RS,If,ExistDir,#1\sr-Latn-RS,DirDelete,#1\sr-Latn-RS
+If,Not,%DistLang%,Equal,sv-SE,If,ExistDir,#1\sv-SE,DirDelete,#1\sv-SE
+If,Not,%DistLang%,Equal,th-TH,If,ExistDir,#1\th-TH,DirDelete,#1\th-TH
+If,Not,%DistLang%,Equal,tr-TR,If,ExistDir,#1\tr-TR,DirDelete,#1\tr-TR
+If,Not,%DistLang%,Equal,uk-UA,If,ExistDir,#1\uk-UA,DirDelete,#1\uk-UA
+If,Not,%DistLang%,Equal,zh-CN,If,ExistDir,#1\zh-CN,DirDelete,#1\zh-CN
+If,Not,%DistLang%,Equal,zh-HK,If,ExistDir,#1\zh-HK,DirDelete,#1\zh-HK
+If,Not,%DistLang%,Equal,zh-TW,If,ExistDir,#1\zh-TW,DirDelete,#1\zh-TW
+
+[CreatePECfg]
+FileCreateBlank,#1
+IniAddSection,#1,main
+IniAddSection,#1,shortcut
+IniAddSection,#1,autorun
+IniAddSection,#1,registry
+IniAddSection,#1,association
+IniAddSection,#1,shells
+IniAddSection,#1,postconfig
+IniRead,%ProjectDir%\script.project,IniVariables,wpeinit,%wpeinit%
+IniWrite,#1,main,wpeinit,%wpeinit%
+IniRead,%ProjectDir%\script.project,IniVariables,ScreenResolution,%ScreenResolution%
+IniWrite,#1,main,screen,%ScreenResolution%
+
+[Custom]
+Echo,"Processing copy Custom Folder..."
+//FileCopy * have unicode bug - workaround with DirCopy * bug
+If,ExistDir,%Custom_FileBox%,DirCopy,%Custom_FileBox%\*,%TargetDir%
+
+[CustomOpen]
+Call,OpenDir,%Custom_FileBox%
+
+[RecTools]
+Echo,"Processing copy Windows Recovery Environment..."
+If,%CopyMode_ScrollBox%,Equal,Standard,Begin
+If,Not,ExistDir,%TargetDir%\sources,DirMake,%TargetDir%\sources
+DirCopy,%BootSRC%\Sources\recovery,%TargetDir%\sources
+End
+// Some Dependencies: autochk.exe,autoconv.exe,blbres.dll,blb_ps.dll,bmrui.exe,BootMenuUX.dll,BootRec.exe,bootux.dll,Dism.exe,DismApi.dll,fveapi.dll,fveui.dll,mprddm.dll,
+// mprdim.dll,PkgMgr.exe,ReAgent.dll,ReInfo.dll,reseteng.dll,RstrtMgr.dll,rstrui.exe,signdrv.dll,srclient.dll,srcore.dll,sysreset.exe,vssadmin.exe,
+// VSSVC.exe,wbadmin.exe,wbengine.exe,wdscapture.exe,wdsclient.exe,wdsmcast.exe, dism Folder, sources\recovery\RecEnv.exe, sources\recovery\StartRep.exe
+BootCopySys32Mui,fveui.dll
+BootCopySys32Mui,ReAgent.dll
+BootCopySys32Mui,ResetEng.dll
+InstallCopySys32Mui,RstrtMgr.dll
+BootCopySys32,srclient.dll
+ExtractWinReSys32Mui,srcore.dll
+ExtractWinReSys32Mui,sysreset.exe
+InstallCopySys32Mui,vssadmin.exe
+BootCopySys32Mui,VSSVC.exe
+//-
+Add_Shortcut,StartMenu,%pTextBox1%,x:\sources\recovery\recenv.exe,%pTextBox2%
+// Startup Repair tool shortcut shouldn't be used directly but it run from Recovery Tools menu
+
+[RefreshYourPC]
+// "Refresh Your PC", "Reset Your PC"  tbs.dll allows to disable these options
+BootCopySys32,tbs.dll
+//-
+ExtractWinReWim,Microsoft-Windows-ImageBasedSetup-Rejuvenation-Package*,windows\System32\catroot\{F750E6C3-38EE-11D1-85E5-00C04FC295EE},%target_sys%\catroot\{F750E6C3-38EE-11D1-85E5-00C04FC295EE},Warn
+ExtractWinReWim,WinPE-Rejuv-Package~*,windows\System32\catroot\{F750E6C3-38EE-11D1-85E5-00C04FC295EE},%target_sys%\catroot\{F750E6C3-38EE-11D1-85E5-00C04FC295EE},Warn
+// Migration is already copied
+//DirCopy,%b32%\migration,%target_sys%
+//-
+If,Not,ExistDir,%target_sys%\Recovery,DirMake,%target_sys%\Recovery
+BootCopy,Windows\System32\Recovery\,ReAgent.xml
+//-
+BootCopySys32,cryptcatsvc.dll
+BootCopySys32Mui,mi.dll
+BootCopySys32Mui,miutils.dll
+BootCopySys32,msdelta.dll
+BootCopySys32Mui,ReAgent.dll
+BootCopySys32Mui,ResetEng.dll
+If,%OS%,Equal,Win8.1,BootCopySys32,ResetEngInterfaces.exe
+BootCopySys32,resetengmig.dll
+BootCopySys32Mui,rundll32.exe
+BootCopySys32,sqmapi.dll
+BootCopySys32,srclient.dll
+BootCopySys32,unattend.dll
+BootCopySys32,wdscore.dll
+BootCopySys32,wdscsl.dll
+BootCopySys32Mui,WdsDiag.dll
+BootCopySys32Mui,wdsimage.dll
+BootCopySys32,wdstptc.dll
+//-
+ExtractWinReSys32,cmi2migxml.dll
+If,%OS%,Equal,Win8.1,ExtractWinReSys32Mui,migcore.dll
+If,%OS%,Equal,Win8,ExtractWinReSys32,migcore.dll
+ExtractWinReSys32,mighost.exe
+If,%OS%,Equal,Win8.1,ExtractWinReSys32Mui,migres.dll
+If,%OS%,Equal,Win8,ExtractWinReSys32,migres.dll
+ExtractWinReSys32,migstore.dll
+ExtractWinReSys32,mxeagent.dll
+ExtractWinReSys32,osfilter.inf
+ExtractWinReSys32,SFCN.dat
+ExtractWinReSys32,SFLCID.dat
+ExtractWinReSys32,SFLISTW7.dat
+ExtractWinReSys32,SFLISTW8.dat
+ExtractWinReSys32,SFPAT.inf
+ExtractWinReSys32,SFPATPG.INF
+ExtractWinReSys32,SFPATW7.inf
+ExtractWinReSys32,SFPATW8.inf
+If,%OS%,Equal,Win8,Begin
+ExtractWinReSys32,SFLISTLH.dat
+ExtractWinReSys32,SFLISTXP.dat
+ExtractWinReSys32,SFPATLH.inf
+ExtractWinReSys32,SFPATXP.inf
+End
+If,%OS%,Equal,Win8.1,Begin
+ExtractWinReSys32,sflistw8.woa.dat
+ExtractWinReSys32,SFLISTWB.dat
+ExtractWinReSys32,sflistwb.woa.dat
+ExtractWinReSys32,SFPATWB.inf
+End
+ExtractWinReSys32Mui,srcore.dll
+ExtractWinReSys32Mui,sysreset.exe
+ExtractWinReSys32,unbcl.dll
+If,%OS%,Equal,Win8,ExtractWinReSys32,upglayer.dll
+ExtractWinReSys32,upgrade_data.xml
+ExtractWinReSys32,upgrade_frmwrk.xml
+If,%OS%,Equal,Win8.1,Begin
+ExtractWinReSys32,csiagent.dll
+ExtractWinReSys32,diager.dll
+ExtractWinReSys32,diagnostic.dll
+ExtractWinReSys32,du.dll
+ExtractWinReSys32,hwcompat.dll
+ExtractWinReSys32,hwcompat.txt
+ExtractWinReSys32,hwexclude.txt
+ExtractWinReSys32,migapp.xml
+ExtractWinReSys32,migisol.dll
+ExtractWinReSys32,migsys.dll
+ExtractWinReSys32,offline.xml
+ExtractWinReSys32,oscomps.woa.xml
+ExtractWinReSys32,oscomps.xml
+ExtractWinReSys32,setupplatform.cfg
+ExtractWinReSys32,setupplatform.dll
+ExtractWinReSys32Mui,setupplatform.exe
+//ExtractWinReSys32,SetupPlatform.ini
+ExtractWinReSys32,upgrade_bulk.xml
+ExtractWinReSys32,upgradeagent.dll
+ExtractWinReSys32,upgradeagent.xml
+ExtractWinReSys32,upgWow_bulk.xml
+ExtractWinReSys32,wdsclientapi.dll
+ExtractWinReSys32,wdsutil.dll
+End
+
+[AddFont]
+Echo,"Processing copy BootSRC Fonts..."
+DirCopy,%bw%\Fonts,%tw%
+
+[StandardFonts]
+BootCopy,Windows\Fonts\,8514fix.fon
+BootCopy,Windows\Fonts\,8514fixr.fon
+BootCopy,Windows\Fonts\,8514oem.fon
+BootCopy,Windows\Fonts\,8514oemr.fon
+BootCopy,Windows\Fonts\,8514sys.fon
+BootCopy,Windows\Fonts\,8514sysr.fon
+BootCopy,Windows\Fonts\,app850.fon
+BootCopy,Windows\Fonts\,app866.fon
+BootCopy,Windows\Fonts\,app936.fon
+BootCopy,Windows\Fonts\,cga40woa.fon
+BootCopy,Windows\Fonts\,cga80woa.fon
+BootCopy,Windows\Fonts\,cga40850.fon
+BootCopy,Windows\Fonts\,cga40866.fon
+BootCopy,Windows\Fonts\,cga80850.fon
+BootCopy,Windows\Fonts\,cga80866.fon
+BootCopy,Windows\Fonts\,consola.ttf
+BootCopy,Windows\Fonts\,ega40woa.fon
+BootCopy,Windows\Fonts\,ega80woa.fon
+BootCopy,Windows\Fonts\,ega40850.fon
+BootCopy,Windows\Fonts\,ega40866.fon
+BootCopy,Windows\Fonts\,ega80850.fon
+BootCopy,Windows\Fonts\,ega80866.fon
+BootCopy,Windows\Fonts\,lucon.ttf
+BootCopy,Windows\Fonts\,marlett.ttf
+BootCopy,Windows\Fonts\,micross.ttf
+BootCopy,Windows\Fonts\,s8514fix.fon
+BootCopy,Windows\Fonts\,s8514oem.fon
+BootCopy,Windows\Fonts\,s8514sys.fon
+BootCopy,Windows\Fonts\,segoeui.ttf
+BootCopy,Windows\Fonts\,seguisym.ttf
+// needed for devmgmt.msc
+BootCopy,Windows\Fonts\,segoeuib.ttf
+BootCopy,Windows\Fonts\,seguili.ttf
+// simpbdo.ttf not exist in %BootSRC% of w7/8 sources
+InstallCopy,Windows\Fonts\,simpbdo.ttf
+BootCopy,Windows\Fonts\,svgafix.fon
+BootCopy,Windows\Fonts\,svgasys.fon
+BootCopy,Windows\Fonts\,tahoma.ttf
+BootCopy,Windows\Fonts\,tahomabd.ttf
+BootCopy,Windows\Fonts\,vga850.fon
+BootCopy,Windows\Fonts\,vga866.fon
+BootCopy,Windows\Fonts\,vga936.fon
+BootCopy,Windows\Fonts\,vgafix.fon
+BootCopy,Windows\Fonts\,vgafixr.fon
+BootCopy,Windows\Fonts\,vgaoem.fon
+BootCopy,Windows\Fonts\,vgasys.fon
+BootCopy,Windows\Fonts\,vgasysr.fon
+//InstallCopy,Windows\Fonts\,vrinda.ttf
+
+[AsianFonts]
+// Asian Fonts ja-JP, ko-KR, zh-CN, zh-HK, zh-TW
+If,%DistLang%,Equal,ja-JP,InstallCopy,Windows\Fonts\,meiryo.ttc
+If,%DistLang%,Equal,ja-JP,InstallCopy,Windows\Fonts\,msgothic.ttc
+If,%DistLang%,Equal,ko-KR,InstallCopy,Windows\Fonts\,malgun.ttf
+If,%DistLang%,Equal,ko-KR,InstallCopy,Windows\Fonts\,gulim.ttc
+If,%DistLang%,Equal,zh-CN,InstallCopy,Windows\Fonts\,msyh.ttc
+If,%DistLang%,Equal,zh-CN,InstallCopy,Windows\Fonts\,mingliu.ttc
+If,%DistLang%,Equal,zh-CN,InstallCopy,Windows\Fonts\,simsun.ttc
+If,%DistLang%,Equal,zh-HK,InstallCopy,Windows\Fonts\,msjh.ttf
+If,%DistLang%,Equal,zh-HK,InstallCopy,Windows\Fonts\,mingliu.ttc
+If,%DistLang%,Equal,zh-HK,InstallCopy,Windows\Fonts\,simsun.ttc
+If,%DistLang%,Equal,zh-TW,InstallCopy,Windows\Fonts\,msjh.ttf
+If,%DistLang%,Equal,zh-TW,InstallCopy,Windows\Fonts\,mingliu.ttc
+If,%DistLang%,Equal,zh-TW,InstallCopy,Windows\Fonts\,simsun.ttc
+
+[FileCopySmallFull]
+Run,%ScriptFile%,FileCopyFull
+//-- SideBySide
+Echo,"Removes the Full Side By Side Files..."
+DirDelete,%tw%\winsxs
+If,ExistDir,%tw%\winsxs,Echo,"%tw%\winsxs could not be deleted!"
+Echo,"Processing standard file copy - Side By Side Files..."
+Run,%ScriptFile%,SideBySide
+//-
+Echo,"Removes Full resource specific Languages folders..."
+Run,%scriptfile%,RemovesFullMuiDir,%t32%
+If,ExistDir,%tw%\SysWOW64,Run,%ScriptFile%,RemovesFullMuiDir,%tw%\SysWOW64
+If,ExistDir,%tw%\Boot\EFI,Run,%ScriptFile%,RemovesFullMuiDir,%tw%\Boot\EFI
+If,ExistDir,%tw%\Boot\PCAT,Run,%ScriptFile%,RemovesFullMuiDir,%tw%\Boot\PCAT
+If,ExistDir,%tw%\Boot\PXE,Run,%ScriptFile%,RemovesFullMuiDir,%tw%\Boot\PXE
+
+[FileCopyFull]
+//-- Boot Files
+Echo,"Processing Full file copy - Processing copy Boot Files..."
+FileCopy,%SourceDir%\bootmgr,%TargetDir%\BOOTMGR
+// iPXE, wimboot bootmgr.exe must be used instead of bootmgr. wimb post http://www.msfn.org/board/topic/170546-win81se/page-5#entry1069633
+FileCopy,%bw%\Boot\PXE\bootmgr.exe,%TargetDir%\bootmgr.exe
+DirCopy,%SourceDir%\Boot,%TargetDir%
+If,ExistFile,%bw%\Boot\PXE\%DistLang%\bootmgr.exe.mui,FileCopy,%bw%\Boot\PXE\%DistLang%\bootmgr.exe.mui,%targetdir%\Boot\%DistLang%
+Else,If,ExistFile,%bw%\Boot\PXE\en-US\bootmgr.exe.mui,FileCopy,%bw%\Boot\PXE\en-US\bootmgr.exe.mui,%targetdir%\Boot\en-US
+//-
+//-- UEFI for x64 building and also for x86 build, ex: Acer Iconia W510
+FileCopy,%SourceDir%\bootmgr.efi,%TargetDir%
+DirCopy,%SourceDir%\efi,%TargetDir%
+//-
+//-- File Copy FULL
+Echo,"Processing Full file copy...This will take several minutes, be patient..."
+//If,ExistFile,%bw%\regedit.exe,FileCopy,%BootSRC%\*,%TargetDir%
+IniRead,%ProjectDir%\script.project,IniVariables,WimToolFile,%WimToolFile%
+If,%WimTools%,Equal,ImageX,Set,%ImageX%,%WimToolFile%
+If,%WimTools%,Equal,WimUtil,Set,%WimUtil%,%WimToolFile%
+//-
+If,%WimTools%,Equal,ImageX,Begin
+Echo,"Apply Windows Win8 boot.wim with %WimTools%, be patient..."
+If,%HideFull_CheckBox%,Equal,False,Set,%OpenHide%,Open
+If,%HideFull_CheckBox%,Equal,True,Set,%OpenHide%,Hide
+ShellExecute,%OpenHide%,%IMAGEX%,"/apply #$q%SourceDir%\sources\boot.wim#$q 2 #$q%TargetDir%#$q"
+Echo,"%WimTools% Apply boot.wim return : %ExitCode%"
+End
+//-
+If,%WimTools%,Equal,WimUtil,Begin
+Echo,"Apply Windows Win8 boot.wim with %WimTools%, be patient..."
+Set,%SW_HIDE%,""
+If,%HideFull_CheckBox%,Equal,True,Set,%SW_HIDE%,@SW_HIDE
+ShellExecute,Hide,%WIMUTIL%,"/Apply #$q%SourceDir%\sources\boot.wim#$q 2 #$q%TargetDir%#$q %SW_HIDE%"
+Echo,"%WimTools% Apply boot.wim return : %ExitCode%"
+End
+//-
+Echo,"Take Ownership of TargetDir, be patient..."
+ShellExecute,Hide,%Tools%\%OSArch%\SetAcl.exe,"-ot #$qfile#$q -on #$q%TargetDir%#$q -rec cont_obj -actn setowner -ownr #$qn:S-1-1-0;s:y#$q"
+If,Not,%ExitCode%,Equal,0,Call,Echo,"SetAcl - NTFS permission on target folder FAIL -> Black Screen on boot",Warn
+Echo,"Grant full access to TargetDir, be patient..."
+ShellExecute,Hide,%Tools%\%OSArch%\SetAcl.exe,"-ot #$qfile#$q -on #$q%TargetDir%#$q -rec cont_obj -actn ace -ace #$qn:S-1-1-0;p:full;s:y#$q"
+If,Not,%ExitCode%,Equal,0,Call,Echo,"SetAcl - NTFS permission on target folder FAIL -> Black Screen on boot",Warn
+//Echo,"Take Ownership of WindowsShell.Manifest, be patient..."
+ShellExecute,Hide,%Tools%\%OSArch%\SetAcl.exe,"-ot #$qfile#$q -on #$q%tw%\WindowsShell.Manifest#$q -actn setowner -ownr #$qn:S-1-1-0;s:y#$q"
+//Echo,"Grant full access to WindowsShell.Manifest, be patient..."
+ShellExecute,Hide,%Tools%\%OSArch%\SetAcl.exe,"-ot #$qfile#$q -on #$q%tw%\WindowsShell.Manifest#$q -actn ace -ace #$qn:S-1-1-0;p:full;s:y#$q"
+//-
+//- Removes unnecessary files
+If,ExistFile,%TargetDir%\setup.exe,FileDelete,%TargetDir%\setup.exe
+// File Explorer block with WallpaperHost.exe
+If,ExistFile,%t32%\WallpaperHost.exe,FileDelete,%t32%\WallpaperHost.exe
+//  Remove "Sources" folder if Recovery Environment not selected
+If,%RecTools_CheckBox%,Equal,False,DirDelete,%targetdir%\sources
+//-
+If,ExistFile,%Tools%\%SourceArch%\wofadk.sys,FileCopy,%Tools%\%SourceArch%\wofadk.sys,%t32%\Drivers
+//-
+//-- Install.wim System32 Files
+Run,%scriptfile%,FileCopyStandardExeInstall
+//If,ExistFile,%i32%\%DistLang%\Licenses,DirCopy,%i32%\%DistLang%\Licenses,%t32%\%DistLang%
+//If,Not,%DistLang%,Equal,en-US,If,ExistFile,%i32%\en-US\Licenses,DirCopy,%i32%\en-US\Licenses,%t32%\en-US
+//-
+Run,%scriptfile%,FileCopyStandardDLLOtherInstall
+
+[FileCopyStandard]
+//-- Boot Files
+Echo,"Processing standard file copy - Boot Files..."
+FileCopy,%SourceDir%\bootmgr,%TargetDir%\BOOTMGR
+DirCopy,%SourceDir%\boot,%TargetDir%
+// iPXE, wimboot bootmgr.exe must be used instead of bootmgr. wimb post http://www.msfn.org/board/topic/170546-win81se/page-5#entry1069633
+FileCopy,%bw%\Boot\PXE\bootmgr.exe,%TargetDir%\bootmgr.exe
+If,ExistFile,%bw%\Boot\PXE\%DistLang%\bootmgr.exe.mui,FileCopy,%bw%\Boot\PXE\%DistLang%\bootmgr.exe.mui,%targetdir%\Boot\%DistLang%
+Else,If,ExistFile,%bw%\Boot\PXE\en-US\bootmgr.exe.mui,FileCopy,%bw%\Boot\PXE\en-US\bootmgr.exe.mui,%targetdir%\Boot\en-US
+DirCopy,%bw%\Boot\Fonts,%tw%\Boot
+BootCopyMui,Windows\Boot\Resources\,bootres.dll
+//DirCopy,%b32%\Boot,%t32%
+BootCopyMui,Windows\System32\Boot\,winload.exe
+//-
+//-- UEFI for x64 build and also for x86 build (ex: Acer Iconia W510)
+FileCopy,%SourceDir%\bootmgr.efi,%TargetDir%
+DirCopy,%SourceDir%\efi,%TargetDir%
+FileCopy,%bw%\Boot\EFI\*,%tw%\Boot\EFI,NOREC
+If,ExistDir,%bw%\Boot\EFI\%DistLang%,DirCopy,%bw%\Boot\EFI\%DistLang%,%tw%\Boot\EFI
+Else,DirCopy,%bw%\Boot\EFI\en-US,%tw%\Boot\EFI
+BootCopyMui,Windows\System32\Boot\,winload.efi
+//-
+//-- copy the root folder Files
+//Echo,"Processing standard file copy - Root folder Files..."
+//DirCopy,"%BootSRC%\Program Files",%TargetDir%
+InstallCopy,"Program Files\Internet Explorer\",ieproxy.dll
+InstallCopy,"Program Files\Internet Explorer\",IEShims.dll
+InstallCopy,"Program Files\Internet Explorer\",sqmapi.dll
+//DirCopy,%BootSRC%\users,%TargetDir% (MakeDir seems enough)
+// NTUSER.DAT from boot.wim
+FileCopy,%BootSRC%\Users\Default\NTUSER.DAT,%TargetDir%\Users\Default
+//FileCopy,%BootSRC%\users\Public\Libraries\RecordedTV.library-ms,%TargetDir%\users\Public\Libraries\
+//DirCopy,%BootSRC%\ProgramData,%TargetDir% (MakeDir seems enough)
+InstallCopy,"ProgramData\Microsoft\User Account Pictures\",guest.bmp
+InstallCopy,"ProgramData\Microsoft\User Account Pictures\",user.bmp
+InstallCopy,ProgramData\Microsoft\Windows\Caches\,cversions.2.db
+//-
+//-- copy the Windows folder Files
+Echo,"Processing standard file copy...Windows folder Files..."
+//-- appPatch, drvmain.sdb to fix USB 3.0
+InstallCopy,Windows\appPatch\,drvmain.sdb
+//-- Globalization
+InstallCopy,Windows\Globalization\Sorting\,SortDefault.nls
+//-- aero Themes done in theme plugin
+//If,ExistDir,%iw%\Resources\Themes\aero,DirCopy,%iw%\Resources\Themes\aero,%tw%\Resources\Themes
+//- Default wallpaper
+InstallCopy,Windows\web\wallpaper\Windows\,img0.jpg
+//-- Windows
+//BootCopyMui,Windows\,bfsvc.exe
+//BootCopyMui,Windows\,hh.exe
+BootCopyMui,Windows\,regedit.exe
+BootCopy,Windows\,system.ini
+BootCopy,Windows\,win.ini
+BootCopy,Windows\,WindowsShell.Manifest
+//-- Recovery
+//If,ExistDir,%b32%\Recovery,DirCopy,%b32%\Recovery,%t32%
+//-
+//-- Registry Files
+Echo,"Processing standard file copy...Registry Files..."
+//FileCopy,%b32%\config\systemprofile\ntuser.dat,%t32%\config\systemprofile
+FileCopy,%b32%\config\BBI,%t32%\config
+FileCopy,%b32%\config\BCD-Template,%t32%\config
+FileCopy,%b32%\config\COMPONENTS,%t32%\config
+FileCopy,%b32%\config\DEFAULT,%t32%\config
+FileCopy,%b32%\config\DRIVERS,%t32%\config
+FileCopy,%b32%\config\ELAM,%t32%\config
+FileCopy,%b32%\config\FP,%t32%\config
+FileCopy,%b32%\config\SAM,%t32%\config
+FileCopy,%b32%\config\SECURITY,%t32%\config
+FileCopy,%b32%\config\SOFTWARE,%t32%\config
+FileCopy,%b32%\config\SYSTEM,%t32%\config
+IniWrite,%projectdir%\script.project,IniVariables,SoftwareHive,Boot.wim
+IniWrite,%projectdir%\script.project,IniVariables,DriversHive,Boot.wim
+//-
+//-- Inf files, Drivers Files, driverstore:
+Echo,"Processing standard file copy - Driver Files...This will take several minutes, be patient..."
+DirCopy,%bw%\inf,%tw%
+Echo,"Processing standard file copy - Drivers Files...It may take some time, be patient..."
+DirCopy,%b32%\drivers,%t32%
+Echo,"Processing standard file copy - Driverstore Folders...It may take some time, be patient..."
+DirCopy,%b32%\driverstore,%t32%
+// Composite Bus Enumerator (FileRepository does not seem mandatory)
+InstallCopy,Windows\inf\,CompositeBus.inf
+InstallCopy,Windows\System32\drivers\,CompositeBus.sys
+//DirCopy,%Source_Sys%\DriverStore\FileRepository\CompositeBus.inf_*,%target_sys%\DriverStore\FileRepository\
+// Remote Desktop Device Redirector Bus (FileRepository does not seem mandatory)
+InstallCopy,Windows\inf\rdpbus.inf
+InstallCopy,Windows\System32\drivers\rdpbus.sys
+//DirCopy,%Source_Sys%\DriverStore\FileRepository\rdpbus.inf_*,%target_sys%\DriverStore\FileRepository\
+//-
+BootCopyMui,Windows\System32\,dxgkrnl.sys
+BootCopyMui,Windows\System32\,clfs.sys
+//-- catroot
+DirCopy,%b32%\catroot\{F750E6C3-38EE-11D1-85E5-00C04FC295EE},%t32%\catroot
+//-- CodeIntegrity
+If,ExistFile,%b32%\CodeIntegrity\driver.stl,FileCopy,%b32%\CodeIntegrity\driver.stl,%t32%\CodeIntegrity
+//-
+DirCopy,%b32%\migration,%t32%
+//-- WMI wbem files
+//- DirCopy,%b32%\wbem,%t32%  (Repository and others folder are created with files), test WMI with wbemtest
+Filecopy,%b32%\wbem\*.*,%t32%\wbem,NOREC
+If,ExistDir,%b32%\wbem\%distlang%,DirCopy,%b32%\wbem\%distlang%,%t32%\wbem
+If,Not,%DistLang%,Equal,en-US,If,ExistDir,%b32%\wbem\en-US,DirCopy,%b32%\wbem\en-US,%t32%\wbem
+DirCopy,%b32%\wbem\xml,%t32%\wbem
+//-
+//-- Servicing (DISM /PEIMG) required for drivers integration
+Echo,"Processing standard file copy - Servicing..."
+DirCopy,%bw%\servicing,%tw%
+DirCopy,%b32%\Dism,%t32%
+DirCopy,%b32%\SMI,%t32%
+//-
+//-- SideBySide
+Echo,"Processing standard file copy - Side By Side Files...It may take some time, be patient"
+Run,%ScriptFile%,SideBySide
+//-
+//-- SysWOW64 Boot Files
+If,ExistDir,%bw%\SysWOW64,Begin
+Echo,"Processing standard file copy - SysWOW64 Files...It may take some time, be patient"
+DirCopy,%bw%\SysWOW64,%tw%
+//- Removes unnecessary Languages folders except fallback en-US
+If,ExistDir,%tw%\SysWOW64,Run,%ScriptFile%,RemovesFullMuiDir,%tw%\SysWOW64
+End
+//-
+//-- System32 Files
+Echo,"Processing standard file copy - System32 Files...This will take several minutes, be patient..."
+//FileCopy,%b32%\*.dat,%t32%,NoRec
+BootCopySys32,schema.dat
+BootCopySys32,srms.dat
+//BootCopySys32,perfc009.dat,perfc00C.dat,perfd009.dat,perfd00C.dat,perfh009.dat,perfh00C.dat,perfi009.dat,perfi00C.dat
+//-
+BootCopySys32Mui,hhctrl.ocx
+If,%SourceArch%,Equal,x86,BootCopySys32Mui,msscript.ocx
+Else,InstallCopySysWoWMui,msscript.ocx
+BootCopySys32Mui,wshom.ocx
+InstallCopySys32,dmview.ocx
+InstallCopySys32Mui,sysmon.ocx
+// Flash.ocx in Windows\System32\Macromed\Flash
+//InstallCopySys32,msdxm.ocx
+//InstallCopySys32,tdc.ocx
+//-
+//FileCopy,%b32%\*.bmp,%t32%,NoRec
+FileCopy,%b32%\*.com,%t32%,NoRec
+BootCopySys32,startnet.cmd
+//-
+If,ExistFile,%Tools%\%SourceArch%\wofadk.sys,FileCopy,%Tools%\%SourceArch%\wofadk.sys,%t32%\Drivers
+//-
+Run,%scriptfile%,FileCopyStandardExe
+Run,%scriptfile%,FileCopyStandardExeInstall
+//If,ExistFile,%i32%\%DistLang%\Licenses,DirCopy,%i32%\%DistLang%\Licenses,%t32%\%DistLang%
+//If,Not,%DistLang%,Equal,en-US,If,ExistFile,%i32%\en-US\Licenses,DirCopy,%i32%\en-US\Licenses,%t32%\en-US
+//-
+Run,%scriptfile%,FileCopyStandardDLLOther
+Run,%scriptfile%,FileCopyStandardDLLOtherInstall
+
+[SideBySide]
+If,Not,ExistDir,%tw%\WinSxS\Manifests,DirMake,%tw%\WinSxS\Manifests
+If,Not,ExistDir,%tw%\WinSxS\Catalogs,DirMake,%tw%\WinSxS\Catalogs
+//-
+If,%SourceArch%,Equal,x86,Set,%SxSArch%,x86
+Else,Set,%SxSArch%,amd64
+//-
+CopyDir,Windows\WinSxS\%SxSArch%_microsoft.windows.c..-controls.resources_*_%DistLang%*
+BootCopy,Windows\WinSxS\manifests\,%SxSArch%_microsoft.windows.c..-controls.resources_*_%DistLang%*
+//-
+CopyDir,Windows\WinSxS\%SxSArch%_microsoft.windows.common-controls*
+BootCopy,Windows\WinSxS\manifests\,%SxSArch%_microsoft.windows.common-controls*
+//-
+CopyDir,Windows\WinSxS\*_microsoft-windows-servicingstack*
+BootCopy,Windows\WinSxS\manifests\,*_microsoft-windows-servicingstack*
+//-
+CopyDir,Windows\WinSxS\%SxSArch%_microsoft.windows.gdiplus*
+BootCopy,Windows\WinSxS\manifests\,%SxSArch%_microsoft.windows.gdiplus*
+//-
+CopyDir,Windows\WinSxS\%SxSArch%_microsoft.windows.isolationautomation*
+BootCopy,Windows\WinSxS\manifests\,%SxSArch%_microsoft.windows.isolationautomation*
+//-
+CopyDir,Windows\WinSxS\%SxSArch%_microsoft-windows-riched32*
+BootCopy,Windows\WinSxS\manifests\,%SxSArch%_microsoft-windows-riched32*
+//-
+// Win8 Task Manager (Install.wim) may be needed
+//CopyDir,Windows\WinSxS\\*_microsoft-windows-a..skmanager.resources_*
+//BootCopy,Windows\WinSxS\manifests\,\*_microsoft-windows-a..skmanager.resources_*
+//-
+//-- SideBySide VC++ (embedded)
+CopyDir,Windows\WinSxS\*_microsoft.vc80.crt*
+CopyDir,Windows\WinSxS\*_microsoft.vc90.crt*
+InstallCopy,Windows\WinSxS\manifests\,*_microsoft.vc80.crt*
+InstallCopy,Windows\WinSxS\manifests\,*_policy.8.0.microsoft.vc80.crt*
+InstallCopy,Windows\WinSxS\manifests\,*_microsoft.vc90.crt*
+InstallCopy,Windows\WinSxS\manifests\,*_policy.9.0.microsoft.vc90.crt*
+//-
+BootCopy,Windows\WinSxS\manifests\,%SxSArch%_microsoft-windows-comdlg32_*
+BootCopy,Windows\WinSxS\manifests\,%SxSArch%_microsoft-windows-comctl32-v5.resources_*_%DistLang%*
+BootCopy,Windows\WinSxS\manifests\,%SxSArch%_microsoft-windows-comdlg32.resources_*_%DistLang%*
+//-
+BootCopy,Windows\WinSxS\manifests\,%SxSArch%_microsoft.windows.fusion*
+BootCopy,Windows\WinSxS\manifests\,%SxSArch%_microsoft.windows.i..utomation.proxystub_*
+BootCopy,Windows\WinSxS\manifests\,%SxSArch%_microsoft.windows.m..gual_components_all_*
+BootCopy,Windows\WinSxS\manifests\,*_microsoft.windows.s...smart_card_library_*
+BootCopy,Windows\WinSxS\manifests\,*_microsoft.windows.s..ation.badcomponents_*
+BootCopy,Windows\WinSxS\manifests\,*_microsoft.windows.s..rt_driver.resources_*
+BootCopy,Windows\WinSxS\manifests\,*_microsoft.windows.s..se.scsi_port_driver_*
+BootCopy,Windows\WinSxS\manifests\,%SxSArch%_microsoft.windows.systemcompatible_*
+BootCopy,Windows\WinSxS\manifests\,%SxSArch%_microsoft-windows-a..core-base.resources_*
+BootCopy,Windows\WinSxS\manifests\,*_microsoft-windows-blb-engine*
+//BootCopy,Windows\WinSxS\manifests\,*_microsoft-windows-blb-winpe_*
+
+[FileCopyStandardExe]
+Echo,"Processing standard file copy - System32 Exe Files...This will take several minutes, be patient..."
+BootCopySys32Mui,attrib.exe
+BootCopySys32Mui,autochk.exe
+BootCopySys32Mui,autoconv.exe
+BootCopySys32Mui,bcdboot.exe
+BootCopySys32Mui,bcdedit.exe
+BootCopySys32Mui,bmrui.exe
+BootCopySys32Mui,bootcfg.exe
+BootCopySys32Mui,BootRec.exe
+BootCopySys32Mui,bootsect.exe
+BootCopySys32Mui,chkdsk.exe
+BootCopySys32Mui,chkntfs.exe
+BootCopySys32Mui,cmd.exe
+BootCopySys32Mui,conhost.exe
+BootCopySys32,convert.exe
+BootCopySys32Mui,cscript.exe
+BootCopySys32Mui,csrss.exe
+BootCopySys32Mui,diskpart.exe
+BootCopySys32Mui,diskraid.exe
+BootCopySys32Mui,Dism.exe
+BootCopySys32,dllhost.exe
+BootCopySys32,dllhst3g.exe
+BootCopySys32Mui,drvinst.exe
+BootCopySys32Mui,drvload.exe
+BootCopySys32,esentutl.exe
+BootCopySys32Mui,expand.exe
+BootCopySys32Mui,find.exe
+BootCopySys32Mui,fltMC.exe
+BootCopySys32Mui,ftp.exe
+BootCopySys32Mui,HOSTNAME.EXE
+BootCopySys32Mui,icacls.exe
+BootCopySys32,LogonUI.exe
+BootCopySys32,lsass.exe
+BootCopySys32,mcbuilder.exe
+BootCopySys32Mui,MdSched.exe
+BootCopySys32Mui,mountvol.exe
+BootCopySys32,MuiUnattend.exe
+BootCopySys32Mui,ndadmin.exe
+BootCopySys32,net.exe
+BootCopySys32,net1.exe
+BootCopySys32Mui,NETSTAT.EXE
+BootCopySys32Mui,newdev.exe
+BootCopySys32Mui,notepad.exe
+BootCopySys32,ntoskrnl.exe
+BootCopySys32Mui,OpenWith.exe
+BootCopySys32Mui,PING.EXE
+BootCopySys32,PkgMgr.exe
+BootCopySys32Mui,poqexec.exe
+BootCopySys32Mui,recover.exe
+BootCopySys32Mui,reg.exe
+BootCopySys32,regedt32.exe
+BootCopySys32Mui,Register-CimProvider.exe
+BootCopySys32Mui,regsvr32.exe
+BootCopySys32Mui,replace.exe
+BootCopySys32Mui,Robocopy.exe
+BootCopySys32Mui,ROUTE.EXE
+BootCopySys32Mui,rstrui.exe
+BootCopySys32Mui,rundll32.exe
+BootCopySys32Mui,sacsess.exe
+BootCopySys32Mui,services.exe
+// For recovery environment
+BootCopySys32Mui,sysreset.exe
+BootCopySys32Mui,sfc.exe
+BootCopySys32Mui,smss.exe
+BootCopySys32Mui,subst.exe
+BootCopySys32Mui,svchost.exe
+BootCopySys32Mui,sxstrace.exe
+BootCopySys32Mui,takeown.exe
+// Boot.wim taskmgr or install.wim taskmgr
+If,%NewTaskMgr_CheckBox%,Equal,True,InstallCopySys32Mui,taskmgr.exe
+Else,Begin
+FileCopy,%b32%\taskmgr.exe,%t32%\taskmgr.exe
+If,ExistFile,%b32%\%DistLang%\taskmgr.exe.mui,FileCopy,%b32%\%DistLang%\taskmgr.exe.mui,%t32%\%DistLang%\taskmgr.exe.mui
+Else,Begin
+If,Not,%DistLang%,Equal,en-US,If,ExistFile,%b32%\en-US\taskmgr.exe.mui,Begin
+FileCopy,%b32%\en-US\taskmgr.exe.mui,%t32%\en-US\taskmgr.exe.mui
+End
+End
+End
+BootCopySys32Mui,TRACERT.EXE
+BootCopySys32,ucsvc.exe
+BootCopySys32Mui,userinit.exe
+BootCopySys32Mui,vds.exe
+BootCopySys32,vdsldr.exe
+BootCopySys32Mui,verifier.exe
+//BootCopySys32,WallpaperHost.exe
+BootCopySys32Mui,wbadmin.exe
+BootCopySys32Mui,wbengine.exe
+BootCopySys32Mui,wdscapture.exe
+BootCopySys32Mui,wdsclient.exe
+BootCopySys32Mui,wdsmcast.exe
+BootCopySys32,wermgr.exe
+BootCopySys32Mui,wevtutil.exe
+BootCopySys32,wimserv.exe
+BootCopySys32Mui,wininit.exe
+BootCopySys32Mui,winload.exe
+BootCopySys32Mui,winload.efi
+BootCopySys32Mui,winlogon.exe
+BootCopySys32Mui,winpeshl.exe
+BootCopySys32,wpeinit.exe
+BootCopySys32,wpeutil.exe
+BootCopySys32Mui,wscript.exe
+BootCopySys32,xcopy.exe
+If,%OS%,Equal,Win8.1,BootCopySys32Mui,drvcfg.exe
+
+[FileCopyStandardExeInstall]
+InstallCopySys32Mui,fsutil.exe
+// Install Inf from contextMenu
+InstallCopySys32Mui,InfDefaultInstall.exe
+
+[FileCopyStandardDLLOther]
+Echo,"Processing standard file copy - System32 Dll Files and others...This will take several minutes, be patient..."
+BootCopySys32Mui,aclui.dll
+BootCopySys32Mui,activeds.dll
+BootCopySys32Mui,advapi32.dll
+BootCopySys32Mui,advpack.dll
+If,ExistFile,%b32%\api-ms-*.dll,FileCopy,%b32%\api-ms-*.dll,%t32%
+If,ExistFile,%b32%\ext-ms-*.dll,FileCopy,%b32%\ext-ms-*.dll,%t32%
+BootCopySys32,apisetschema.dll
+BootCopySys32Mui,atl.dll
+BootCopySys32,atmlib.dll
+BootCopySys32Mui,authui.dll
+BootCopySys32,authz.dll
+// install class Slide show
+If,%OS%,Equal,Win8,BootCopySys32Mui,AuxiliaryDisplayClassInstaller.dll
+BootCopySys32,basesrv.dll
+BootCopySys32,bcd.dll
+BootCopySys32,bcdprov.dll
+BootCopySys32,bcdsrv.dll
+BootCopySys32Mui,bcrypt.dll
+BootCopySys32,bcryptprimitives.dll
+BootCopySys32,blb_ps.dll
+BootCopySys32Mui,blbres.dll
+BootCopySys32Mui,bootstr.dll
+BootCopySys32Mui,bootux.dll
+BootCopySys32,BOOTVID.DLL
+BootCopySys32,browcli.dll
+BootCopySys32,browseui.dll
+BootCopySys32,cabinet.dll
+BootCopySys32,cdd.dll
+BootCopySys32Mui,certcli.dll
+BootCopySys32,cfgmgr32.dll
+BootCopySys32Mui,chkwudrv.dll
+BootCopySys32Mui,ci.dll
+BootCopySys32Mui,clb.dll
+BootCopySys32Mui,clusapi.dll
+BootCopySys32,cmdext.dll
+BootCopySys32,cmipnpinstall.dll
+BootCopySys32Mui,combase.dll
+BootCopySys32,comcat.dll
+BootCopySys32Mui,comdlg32.dll
+BootCopySys32Mui,comres.dll
+BootCopySys32,cnvfat.dll
+BootCopySys32Mui,console.dll
+BootCopySys32Mui,credui.dll
+BootCopySys32Mui,crypt32.dll
+BootCopySys32,cryptbase.dll
+BootCopySys32,cryptcatsvc.dll
+BootCopySys32Mui,cryptdlg.dll
+BootCopySys32,cryptdll.dll
+BootCopySys32Mui,cryptext.dll
+BootCopySys32,cryptsp.dll
+BootCopySys32Mui,cryptsvc.dll
+BootCopySys32Mui,cryptui.dll
+BootCopySys32Mui,cryptxml.dll
+BootCopySys32Mui,csrsrv.dll
+BootCopySys32,dbgeng.dll
+BootCopySys32,dbghelp.dll
+BootCopySys32,defragproxy.dll
+BootCopySys32Mui,defragsvc.dll
+BootCopySys32,devobj.dll
+BootCopySys32,devrtl.dll
+BootCopySys32,dfscli.dll
+BootCopySys32Mui,dhcpcsvc.dll
+BootCopySys32Mui,dhcpcsvc6.dll
+BootCopySys32Mui,DismApi.dll
+BootCopySys32Mui,dispci.dll
+BootCopySys32,dispex.dll
+BootCopySys32Mui,dnsapi.dll
+BootCopySys32,dpapi.dll
+BootCopySys32Mui,dpapisrv.dll
+BootCopySys32,drvstore.dll
+BootCopySys32Mui,dskquota.dll
+BootCopySys32,dsparse.dll
+BootCopySys32,dsrole.dll
+BootCopySys32Mui,dssenh.dll
+BootCopySys32Mui,dui70.dll
+BootCopySys32Mui,duser.dll
+BootCopySys32Mui,dwmapi.dll
+BootCopySys32Mui,dxgwdi.dll
+BootCopySys32Mui,esent.dll
+BootCopySys32,eventcls.dll
+BootCopySys32,fbwflib.dll
+BootCopySys32,feclient.dll
+BootCopySys32Mui,FirewallAPI.dll
+BootCopySys32Mui,fltLib.dll
+BootCopySys32,fmifs.dll
+BootCopySys32Mui,fms.dll
+BootCopySys32,fontsub.dll
+BootCopySys32,framedyn.dll
+BootCopySys32,framedynos.dll
+BootCopySys32,fsutilext.dll
+BootCopySys32Mui,FWPUCLNT.DLL
+BootCopySys32,gdi32.dll
+BootCopySys32,GdiPlus.dll
+BootCopySys32Mui,gpapi.dll
+BootCopySys32Mui,gpsvc.dll
+BootCopySys32,hal.dll
+If,%SourceArch%,Equal,x86,BootCopySys32,HalExtIntcLpioDMA.dll
+If,%SourceArch%,Equal,x86,BootCopySys32,HalExtIntcUartDMA.dll
+If,%SourceArch%,Equal,x86,BootCopySys32,halmacpi.dll
+BootCopySys32Mui,hid.dll
+BootCopySys32Mui,hidserv.dll
+BootCopySys32Mui,iertutil.dll
+BootCopySys32Mui,ifmon.dll
+BootCopySys32,ifsutil.dll
+BootCopySys32,ifsutilx.dll
+BootCopySys32,imagehlp.dll
+// copy imageres.dll from Boot.wim, smaller. there is a choice in Explorer plugin to copy the one from install.wim
+FileCopy,%b32%\imageres.dll,%t32%\imageres.dll
+If,ExistFile,%b32%\%DistLang%\imageres.dll.mui,FileCopy,%b32%\%DistLang%\imageres.dll.mui,%t32%\%DistLang%\imageres.dll.mui
+Else,Begin
+If,Not,%DistLang%,Equal,en-US,If,ExistFile,%b32%\en-US\imageres.dll.mui,Begin
+FileCopy,%b32%\en-US\imageres.dll.mui,%t32%\en-US\imageres.dll.mui
+End
+End
+BootCopySys32Mui,imagesp1.dll
+BootCopySys32Mui,imapi.dll
+BootCopySys32Mui,imapi2.dll
+BootCopySys32Mui,imapi2fs.dll
+BootCopySys32,imm32.dll
+BootCopySys32Mui,input.dll
+BootCopySys32Mui,IPHLPAPI.DLL
+BootCopySys32Mui,jscript.dll
+BootCopySys32Mui,jscript9.dll
+BootCopySys32,jsproxy.dll
+BootCopySys32,KBDUS.DLL
+BootCopySys32,kd.dll
+BootCopySys32,kdcom.dll
+BootCopySys32Mui,KdsCli.dll
+BootCopySys32,kdusb.dll
+BootCopySys32Mui,kerberos.dll
+BootCopySys32Mui,kernel32.dll
+BootCopySys32Mui,KernelBase.dll
+BootCopySys32Mui,kmddsp.tsp
+BootCopySys32,ktmw32.dll
+BootCopySys32,l_intl.nls
+BootCopySys32,linkinfo.dll
+BootCopySys32Mui,loadperf.dll
+BootCopySys32,locale.nls
+BootCopySys32,logoncli.dll
+BootCopySys32,lpk.dll
+BootCopySys32Mui,lsasrv.dll
+BootCopySys32Mui,lsm.dll
+BootCopySys32,luainstall.dll
+BootCopySys32,lz32.dll
+BootCopySys32Mui,mfc42.dll
+BootCopySys32Mui,mfc42u.dll
+BootCopySys32Mui,montr_ci.dll
+BootCopySys32Mui,mpr.dll
+BootCopySys32,mprapi.dll
+BootCopySys32,msasn1.dll
+BootCopySys32Mui,msctf.dll
+BootCopySys32Mui,msftedit.dll
+BootCopySys32,msiltcfg.dll
+BootCopySys32,msimg32.dll
+BootCopySys32,msls31.dll
+BootCopySys32Mui,msports.dll
+BootCopySys32Mui,msprivs.dll
+BootCopySys32Mui,mssign32.dll
+BootCopySys32Mui,msv1_0.dll
+BootCopySys32,msvcirt.dll
+BootCopySys32,msvcp60.dll
+BootCopySys32,msvcrt.dll
+If,%SourceArch%,Equal,x86,BootCopySys32,msvcrt40.dll
+Else,InstallCopySysWoW,msvcrt40.dll
+BootCopySys32Mui,mswsock.dll
+// msxml
+BootCopySys32,msxml3.dll
+BootCopySys32Mui,msxml3r.dll
+BootCopySys32,msxml6.dll
+BootCopySys32Mui,msxml6r.dll
+BootCopySys32,mtxdm.dll
+BootCopySys32,nci.dll
+BootCopySys32,ncobjapi.dll
+BootCopySys32Mui,ncrypt.dll
+BootCopySys32,ncsi.dll
+BootCopySys32,netapi32.dll
+BootCopySys32Mui,netjoin.dll
+BootCopySys32Mui,netmsg.dll
+BootCopySys32,netprovisionsp.dll
+BootCopySys32,netutils.dll
+BootCopySys32Mui,newdev.dll
+// Pen and touch Input Component
+BootCopySys32Mui,ninput.dll
+BootCopySys32,nlaapi.dll
+BootCopySys32Mui,nlasvc.dll
+BootCopySys32,normaliz.dll
+BootCopySys32,nrpsrv.dll
+BootCopySys32,nsi.dll
+BootCopySys32Mui,nsisvc.dll
+BootCopySys32Mui,ntasn1.dll
+BootCopySys32Mui,ntdll.dll
+BootCopySys32,ntdsapi.dll
+BootCopySys32Mui,ntlanman.dll
+BootCopySys32Mui,ntmarta.dll
+BootCopySys32Mui,ntshrui.dll
+BootCopySys32,odbc32.dll
+BootCopySys32Mui,odbcint.dll
+BootCopySys32Mui,ole32.dll
+BootCopySys32,oleacc.dll
+BootCopySys32Mui,oleaccrc.dll
+BootCopySys32,oleaut32.dll
+If,%SourceArch%,Equal,x86,BootCopySys32,olepro32.dll
+Else,InstallCopySysWoW,olepro32.dll
+BootCopySys32,osuninst.dll
+BootCopySys32Mui,pcwum.dll
+BootCopySys32Mui,pnpui.dll
+BootCopySys32Mui,powrprof.dll
+BootCopySys32Mui,procinst.dll
+BootCopySys32,profapi.dll
+BootCopySys32Mui,propsys.dll
+BootCopySys32,provthrd.dll
+BootCopySys32,prvdmofcomp.dll
+BootCopySys32,psapi.dll
+BootCopySys32Mui,PSModuleDiscoveryProvider.dll
+BootCopySys32,psmodulediscoveryprovider.mof
+BootCopySys32Mui,PSHED.DLL
+BootCopySys32Mui,QUTIL.DLL
+BootCopySys32,rasadhlp.dll
+BootCopySys32Mui,rasapi32.dll
+BootCopySys32,rasman.dll
+BootCopySys32Mui,ReAgent.dll
+BootCopySys32,regapi.dll
+BootCopySys32,resutils.dll
+BootCopySys32,riched20.dll
+BootCopySys32,riched32.dll
+BootCopySys32,rnr20.dll
+BootCopySys32Mui,RpcEpMap.dll
+BootCopySys32Mui,rpcrt4.dll
+BootCopySys32,RpcRtRemote.dll
+BootCopySys32,rpcss.dll
+BootCopySys32Mui,rsaenh.dll
+BootCopySys32,rtutils.dll
+BootCopySys32Mui,sacsvr.dll
+BootCopySys32,samcli.dll
+BootCopySys32,samlib.dll
+BootCopySys32Mui,samsrv.dll
+BootCopySys32Mui,scecli.dll
+BootCopySys32Mui,scesrv.dll
+BootCopySys32Mui,scext.dll
+BootCopySys32Mui,schannel.dll
+BootCopySys32,schedcli.dll
+BootCopySys32Mui,scrobj.dll
+BootCopySys32Mui,scrrun.dll
+BootCopySys32,sdhcinst.dll
+BootCopySys32Mui,sechost.dll
+BootCopySys32,secur32.dll
+BootCopySys32,security.dll
+BootCopySys32,SensApi.dll
+BootCopySys32,setbcdlocale.dll
+BootCopySys32Mui,setupapi.dll
+BootCopySys32,sfc.dll
+BootCopySys32,sfc_os.dll
+BootCopySys32Mui,SHCore.dll
+BootCopySys32Mui,shell32.dll
+BootCopySys32Mui,shlwapi.dll
+BootCopySys32Mui,slc.dll
+BootCopySys32Mui,SmiEngine.dll
+BootCopySys32,snmpapi.dll
+BootCopySys32,spfileq.dll
+BootCopySys32,SPInf.dll
+BootCopySys32Mui,sppc.dll
+BootCopySys32,srclient.dll
+BootCopySys32Mui,srcore.dll
+BootCopySys32,srhelper.dll
+BootCopySys32,srvcli.dll
+BootCopySys32,sspicli.dll
+BootCopySys32,sspisrv.dll
+BootCopySys32,SSShim.dll
+BootCopySys32,stdole2.tlb
+BootCopySys32,stdole32.tlb
+BootCopySys32Mui,Storprop.dll
+BootCopySys32,streamci.dll
+BootCopySys32Mui,sxproxy.dll
+BootCopySys32Mui,sxs.dll
+BootCopySys32,sxshared.dll
+BootCopySys32,sxssrv.dll
+BootCopySys32Mui,sysclass.dll
+BootCopySys32,sysntfy.dll
+BootCopySys32,syssetup.dll
+BootCopySys32Mui,tapi32.dll
+BootCopySys32Mui,tdh.dll
+BootCopySys32,tsddd.dll
+BootCopySys32Mui,tzres.dll
+BootCopySys32,uexfat.dll
+BootCopySys32,ufat.dll
+BootCopySys32Mui,ulib.dll
+BootCopySys32Mui,umpnpmgr.dll
+BootCopySys32,unattend.dll
+BootCopySys32,untfs.dll
+BootCopySys32,uReFS.dll
+BootCopySys32,ureg.dll
+BootCopySys32Mui,urlmon.dll
+BootCopySys32Mui,user32.dll
+BootCopySys32Mui,userenv.dll
+BootCopySys32Mui,userinitext.dll
+BootCopySys32,usp10.dll
+BootCopySys32Mui,utildll.dll
+BootCopySys32,uudf.dll
+BootCopySys32,UXInit.dll
+BootCopySys32Mui,uxtheme.dll
+BootCopySys32Mui,vbscript.dll
+If,%SourceArch%,Equal,x86,BootCopySys32,vdmdbg.dll
+Else,InstallCopySysWoW,vdmdbg.dll
+BootCopySys32,vds_ps.dll
+BootCopySys32Mui,vdsbas.dll
+BootCopySys32Mui,vdsdyn.dll
+BootCopySys32Mui,vdsutil.dll
+BootCopySys32Mui,vdsvd.dll
+BootCopySys32,verifier.dll
+BootCopySys32,version.dll
+BootCopySys32,virtdisk.dll
+BootCopySys32,vpnikeapi.dll
+BootCopySys32,vssapi.dll
+BootCopySys32Mui,vsstrace.dll
+BootCopySys32Mui,w32time.dll
+BootCopySys32,w32topl.dll
+BootCopySys32,wbemcomn.dll
+BootCopySys32,wdigest.dll
+BootCopySys32,wdscore.dll
+BootCopySys32Mui,webio.dll
+BootCopySys32Mui,webservices.dll
+BootCopySys32Mui,wer.dll
+BootCopySys32Mui,werui.dll
+BootCopySys32Mui,wevtapi.dll
+BootCopySys32Mui,wevtsvc.dll
+BootCopySys32Mui,wimgapi.dll
+BootCopySys32Mui,win32k.sys
+BootCopySys32Mui,winbio.dll
+BootCopySys32,winbrand.dll
+BootCopySys32,WindowsCodecs.dll
+BootCopySys32Mui,winhttp.dll
+BootCopySys32Mui,wininet.dll
+BootCopySys32,wininitext.dll
+BootCopySys32Mui,winmm.dll
+BootCopySys32Mui,winmmbase.dll
+BootCopySys32,winnsi.dll
+BootCopySys32Mui,WinSCard.dll
+BootCopySys32Mui,winspool.drv
+BootCopySys32Mui,winsrv.dll
+BootCopySys32,winsta.dll
+BootCopySys32,wintrust.dll
+BootCopySys32,wkscli.dll
+BootCopySys32Mui,wkssvc.dll
+BootCopySys32Mui,Wldap32.dll
+BootCopySys32,wmi.dll
+BootCopySys32,wmicmiplugin.dll
+BootCopySys32,wmidcom.dll
+BootCopySys32,WmiMgmt.msc
+If,ExistFile,%b32%\%DistLang%\WmiMgmt.msc,FileCopy,%b32%\%DistLang%\WmiMgmt.msc,%t32%\%DistLang%
+Else,If,ExistFile,%b32%\en-US\WmiMgmt.msc,FileCopy,%b32%\en-US\WmiMgmt.msc,%t32%\en-US
+BootCopySys32Mui,wmiprop.dll
+BootCopySys32Mui,wmitomi.dll
+BootCopySys32,wmsgapi.dll
+BootCopySys32Mui,wpeutil.dll
+BootCopySys32Mui,ws2_32.dll
+BootCopySys32,ws2help.dll
+BootCopySys32,wshcon.dll
+BootCopySys32Mui,wship6.dll
+BootCopySys32Mui,WSHTCPIP.DLL
+BootCopySys32Mui,wsock32.dll
+BootCopySys32,wtsapi32.dll
+BootCopySys32,xmllite.dll
+// Dependency for recovery environment
+BootCopySys32,BootMenuUX.dll
+BootCopySys32Mui,fveapi.dll
+BootCopySys32,fvecerts.dll
+BootCopySys32Mui,spp.dll
+//--
+If,%OS%,Equal,Win8.1,Begin
+BootCopySys32Mui,advapi32res.dll
+BootCopySys32,CSystemEventsBrokerClient.dll
+BootCopySys32Mui,d2d1.dll
+//BootCopySys32Mui,defragres.dll
+// needed for driver install
+BootCopySys32Mui,dab.dll
+BootCopySys32Mui,dabapi.dll
+BootCopySys32,EventAggregation.dll
+BootCopySys32Mui,SystemEventsBrokerServer.dll
+//-
+BootCopySys32,NetSetupApi.dll
+BootCopySys32,ReInfo.dll
+BootCopySys32Mui,smphost.dll
+// May be better to use the file of Install.wim
+BootCopySys32,sqmapi.dll
+BootCopySys32,wincorlib.dll
+BootCopySys32,Windows.Devices.HumanInterfaceDevice.dll
+BootCopySys32,winlogonext.dll
+BootCopySys32Mui,wldp.dll
+End
+
+[FileCopyStandardDLLOtherInstall]
+Echo,"Processing standard file copy - System32 Dll Install Files and others...This will take several minutes, be patient..."
+InstallCopySys32,vmstorfltres.dll
+// diskcopy for file explorer format
+InstallCopySys32Mui,diskcopy.dll
+// Taking Ownership (Appinfo and ProfSvc services)
+InstallCopySys32Mui,appinfo.dll
+InstallCopySys32Mui,provsvc.dll
+InstallCopySys32Mui,profsvc.dll
+InstallCopySys32,profsvcext.dll
+InstallCopySys32Mui,objsel.dll
+// Disk Cleanup
+InstallCopySys32Mui,cleanmgr.exe
+// Defrag console version
+InstallCopySys32Mui,Defrag.exe
+InstallCopySys32Mui,dfrgui.exe
+// SysTray icon battery, USB
+InstallCopySys32Mui,batmeter.dll
+InstallCopySys32Mui,stobject.dll
+// Power management (good to have it in base copy file)
+InstallCopySys32Mui,umpo.dll
+InstallCopySys32Mui,umpoext.dll
+InstallCopySys32,umpowmi.dll
+//crtdll.dll (no x64 version and already in wow64 script for x64 builds)
+If,%SourceArch%,Equal,x86,InstallCopySys32,crtdll.dll
+InstallCopySys32,deviceassociation.dll
+InstallCopySys32Mui,devicesetupmanager.dll
+InstallCopySys32Mui,devenum.dll
+// others for device: devicedisplaystatusmanager.dll, devicesetupmanagerapi.dll, devicesetupstatusprovider.dll, devdispitemprovider.dll, devinv.dll, devpropmgr.dll
+// cab, zip support with cabinet.dll
+InstallCopySys32Mui,cabview.dll
+InstallCopySys32Mui,zipfldr.dll
+//-
+InstallCopySys32,clbcatq.dll
+InstallCopySys32Mui,dskquoui.dll
+InstallCopySys32Mui,hidphone.tsp
+InstallCopySys32Mui,iologmsg.dll
+InstallCopySys32Mui,ubpm.dll
+// mlang.dll is not in 8, 8.1 in boot.wim but .mui exist in boot.wim! copied from Install.wim
+InstallCopySys32Mui,mlang.dll
+InstallCopySys32Mui,mshtml.dll
+InstallCopySys32Mui,oledlg.dll
+InstallCopySys32Mui,shellstyle.dll
+InstallCopySys32,ustprov.dll
+InstallCopySys32Mui,wevtfwd.dll
+// WMI provider for signed drivers
+InstallCopySys32,signdrv.dll
+// Device Manager
+InstallCopySys32Mui,hdwwiz.cpl
+InstallCopySys32Mui,hdwwiz.exe
+// Touch keyboard and Handwriting panel service
+InstallCopySys32Mui,TabSvc.dll
+// taskmgr system resource usage monitor
+//InstallCopySys32Mui,srumapi.dll
+// Device center storage context menu handler
+InstallCopySys32Mui,storagecontexthandler.dll
+InstallCopySys32,storagewmi_passthru.dll
+// Windows USB driver user library, needed?
+InstallCopySys32,winusb.dll
+InstallCopySys32Mui,wpd_ci.dll
+//--
+If,%OS%,Equal,Win8.1,Begin
+InstallCopySys32Mui,BrokerLib.dll
+End
+
+[BypassDriverSigningNotes]
+// JFX:  http://TheOven.org/index.php?topic=866.msg11055#msg11055  :)
+// DISABLE_INTEGRITY_CHECKS unicode string in winload.exe (system32 & system32\boot) needs to be changed to something else. Than the PE Header checksum needs to be corrected (PEChecksum.exe: http://www.coderforlife.com/projects/utilities/#PEChecksum)
+// To get bootmgr accepts the invalid certificate of the new winload.exe bcdedit -store bcd /set {default} NoIntegrityChecks 1 and bcdedit -store bcd /set {default} loadoptions DISABLE_INTEGRITY_CHECKS are needed.
+// No Patch for winload.efi, it properly don't work with secure boot.
+
+[BypassDriverSigning]
+If,Not,ExistFile,%Tools%\gsar.exe,If,Not,ExistFile,%Tools%\PEChecksum.exe,Call,Echo,"Gsar.exe and PEChecksum.exe are required in Tools folder to bypass Driver signing",Warn
+ShellExecute,Hide,%Tools%\gsar.exe,"-o -s:x44:x00:x49:x00:x53:x00:x41:x00:x42:x00:x4C:x00:x45:x00:x5F:x00:x49:x00:x4E:x00:x54:x00:x45:x00:x47:x00:x52:x00:x49:x00:x54:x00:x59:x00:x5F:x00:x43:x00:x48:x00:x45:x00:x43:x00:x4B:x00:x53:x00 -r:x58:x00:x49:x00:x53:x00:x41:x00:x42:x00:x4C:x00:x45:x00:x5F:x00:x49:x00:x4E:x00:x54:x00:x45:x00:x47:x00:x52:x00:x49:x00:x54:x00:x59:x00:x5F:x00:x43:x00:x48:x00:x45:x00:x43:x00:x4B:x00:x53:x00 #$q%Target_Sys%\winload.exe#$q"
+If,Not,%ExitCode%,Equal,0,Echo,"Update winload.exe failed, exit code : %ExitCode%"
+ShellExecute,Hide,%Tools%\PEChecksum.exe,"#$q%Target_Sys%\winload.exe#$q"
+If,Not,%ExitCode%,Equal,0,Echo,"Update the checksum failed, exit code : %ExitCode%"
+Filecopy,%Target_Sys%\winload.exe,%Target_Sys%\Boot\winload.exe,NoWarn
+//-
+//- Add BCD NoIntegrityChecks & DISABLE_INTEGRITY_CHECKS to accept Patched winload.exe in Bios BCD
+If,Not,ExistFile,%Tools%\%SourceArch%\bcdedit.exe,FileCopy,%InstallSRC%\Windows\System32\bcdedit.exe,%Tools%\%SourceArch%
+Set,%BcdEditExe%,%Tools%\%OSArch%\bcdedit.exe
+If,Not,ExistFile,%BcdEditExe%,Set,%BcdEditExe%,%Tools%\x86\bcdedit.exe
+//source x64 host x86
+If,Not,ExistFile,%BcdEditExe%,Message,"%Tools%\%OSArch%\bcdedit.exe NOT found. Build Stop Now",Error
+If,Not,ExistFile,%BcdEditExe%,Halt,"%Tools%\%OSArch%\bcdedit.exe NOT found. Build Stop Now"
+//-
+ShellExecute,Hide,%BcdEditExe%,"/store #$q%TargetDir%\Boot\bcd#$q /set {default} NoIntegrityChecks Yes",%Tools%\%OSArch%\
+ShellExecute,Hide,%BcdEditExe%,"/store #$q%TargetDir%\Boot\bcd#$q /set {default} loadoptions DISABLE_INTEGRITY_CHECKS",%Tools%\%OSArch%\
+
+[Process_Keyboard]
+// changed by - rpaz - Lancelot for checkbox Add All Keyboard
+Echo,"Processing copy Keyboards..."
+If,Not,%CopyMode_ScrollBox%,Equal,full,If,%AllKbd_CheckBox%,Equal,True,FileCopy,%b32%\KBD*.DLL,%t32%,NoRec
+Else,Begin
+FileCopy,%b32%\KBDUS.DLL,%t32%\
+//--> minimum NLS first now because of Auto
+If,ExistSection,%ScriptDir%\KeyBoard.script,minimum_KBD_%DistLang%,Run,%ScriptDir%\KeyBoard.script,minimum_KBD_%DistLang%
+End
+//-
+Echo,"Processing KeyBoard settings..."
+IniRead,%ProjectDir%\script.project,IniVariables,TKeyBoard,%KeyBoard%
+//-
+If,%KeyBoard%,Equal,"Import HostOS",Begin
+If,ExistSection,"%ScriptDir%\HostOS Import Manager.script",Called_process,Run,"%ScriptDir%\HostOS Import Manager.script",Called_process,"%ScriptDir%\HostOS Import Manager.script",KeyBoard
+Else,Halt,"%ScriptDir%\HostOS Import Manager plugin was not found. Exiting..."
+End
+Else,Begin
+If,ExistSection,"%ScriptDir%\KeyBoard.script",Called_process,Run,"%ScriptDir%\KeyBoard.script",Called_process,"%ScriptDir%\KeyBoard.script",%KeyBoard%
+Else,Halt,"%ScriptDir%\KeyBoard plugin was not found. Exiting..."
+End
+
+[Process_TimeZone]
+Echo,"Set the registry permission on the '\services\W32Time'..."
+RegHiveLoad,Tmp_System,%RegSystem%
+// Allow to start the W32Time service should set the registry permission on the '\services\W32Time'
+ShellExecute,Hide,%Tools%\%OSArch%\SetAcl.exe,"-on HKLM\Tmp_System\ControlSet001\services\W32Time -ot reg -rec yes -actn ace -ace n:S-1-1-0;p:full;s:y"
+If,Not,%ExitCode%,Equal,0,Call,Echo,"SetAcl - NTFS permission on Tmp_System\ControlSet001\services\W32Time FAIL",Warn
+RegHiveUnLoad,Tmp_System
+//-
+Echo,"Processing Time Zone Information settings..."
+IniRead,%ProjectDir%\script.project,IniVariables,TTimeZone,%TimeZone%
+//-
+If,%TimeZone%,Equal,"Import HostOS",Begin
+If,ExistSection,"%ScriptDir%\HostOS Import Manager.script",Called_process,Run,"%ScriptDir%\HostOS Import Manager.script",Called_process,"%ScriptDir%\HostOS Import Manager.script",TimeZone
+Else,Halt,"%ScriptDir%\HostOS Import Manager plugin was not found. Exiting..."
+End
+Else,Begin
+If,ExistSection,"%ScriptDir%\TimeZone.script",Called_process,Run,"%ScriptDir%\TimeZone.script",Called_process,"%ScriptDir%\TimeZone.script",%TimeZone%
+Else,Halt,"%ScriptDir%\TimeZone plugin was not found. Exiting..."
+End
+
+[Process_Format]
+Echo,"Processing Format settings..."
+IniRead,%ProjectDir%\script.project,IniVariables,TFormat,%Format%
+//-
+If,%Format%,Equal,"Import HostOS",Begin
+If,ExistSection,"%ScriptDir%\HostOS Import Manager.script",Called_process,Run,"%ScriptDir%\HostOS Import Manager.script",Called_process,"%ScriptDir%\HostOS Import Manager.script",Format
+Else,Halt,"%ScriptDir%\HostOS Import Manager plugin was not found. Exiting..."
+End
+Else,Begin
+If,ExistSection,"%ScriptDir%\Format.script",Called_process,Run,"%ScriptDir%\Format.script",Called_process,"%ScriptDir%\Format.script",%Format%
+Else,Halt,"%ScriptDir%\Format plugin was not found. Exiting..."
+End
+
+[Process_Locale]
+Echo,"Processing copy Language Files (Nls)..."
+If,Not,%CopyMode_ScrollBox%,Equal,full,If,%AllNls_CheckBox%,Equal,True,FileCopy,%b32%\*.nls,%t32%,NoRec
+Else,If,ExistSection,%LocaleScript%,minimum_NLS_%DistLang%,Run,%LocaleScript%,minimum_NLS_%DistLang%
+//--> minimum NLS first now because of Auto
+//-
+Echo,"Processing locale settings..."
+IniRead,%ProjectDir%\script.project,IniVariables,TLocale,%Locale%
+//-
+If,%Locale%,Equal,"Import HostOS",Begin
+// Setting for Auto first to match the source (not sure that it is necessary)
+Run,%LocaleScript%,Called_process,Auto
+If,ExistSection,"%ScriptDir%\HostOS Import Manager.script",Called_process,Run,"%ScriptDir%\HostOS Import Manager.script",Called_process,"%ScriptDir%\HostOS Import Manager.script",Locale
+Else,Halt,"%ScriptDir%\HostOS Import Manager plugin was not found. Exiting..."
+End
+Else,Begin
+Run,%LocaleScript%,Called_process,%Locale%
+End
+
+[CreateDesktopIniFiles]
+CopyDesktopIni,"%InstallSRC%\Program Files\desktop.ini","%targetdir%\Program Files"
+//CopyDesktopIni,"%InstallSRC%\Program Files\Common Files\microsoft shared\Stationery\Desktop.ini","%targetdir%\Program Files\Common Files\microsoft shared\Stationery"
+//-
+CopyDesktopIni,"%BootSRC%\ProgramData\Microsoft\Windows\Start Menu\desktop.ini","%targetdir%\ProgramData\Microsoft\Windows\Start Menu"
+CopyDesktopIni,"%BootSRC%\ProgramData\Microsoft\Windows\Start Menu\Programs\desktop.ini","%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs"
+If,ExistDir,"%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools",Begin
+If,Not,ExistFile,"%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools\desktop.ini",CopyDesktopIni,"%BootSRC%\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools\desktop.ini","%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools"
+End
+If,ExistDir,"%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp",CopyDesktopIni,"%BootSRC%\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\desktop.ini","%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp"
+//- Allready done with BootSRC or Not used currently
+//CopyDesktopIni,"%InstallSRC%\ProgramData\Microsoft\Windows\Start Menu\desktop.ini","%targetdir%\ProgramData\Microsoft\Windows\Start Menu"
+//CopyDesktopIni,"%InstallSRC%\ProgramData\Microsoft\Windows\Start Menu\Programs\desktop.ini","%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs"
+//CopyDesktopIni,"%InstallSRC%\ProgramData\Microsoft\Windows\Start Menu\Programs\Accessibility\Desktop.ini","%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\Accessibility"
+CopyDesktopIni,"%InstallSRC%\ProgramData\Microsoft\Windows\Start Menu\Programs\Accessories\desktop.ini","%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\Accessories"
+//CopyDesktopIni,"%InstallSRC%\ProgramData\Microsoft\Windows\Start Menu\Programs\Accessories\System Tools\desktop.ini","%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\Accessories\System Tools"
+//CopyDesktopIni,"%InstallSRC%\ProgramData\Microsoft\Windows\Start Menu\Programs\Accessories\Tablet PC\Desktop.ini","%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\Accessories\Tablet PC"
+If,ExistDir,"%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools",CopyDesktopIni,"%InstallSRC%\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools\desktop.ini","%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools"
+//CopyDesktopIni,"%InstallSRC%\ProgramData\Microsoft\Windows\Start Menu\Programs\Maintenance\Desktop.ini","%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\Maintenance"
+If,ExistDir,"%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp",CopyDesktopIni,"%InstallSRC%\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\desktop.ini","%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp"
+CopyDesktopIni,"%InstallSRC%\ProgramData\Microsoft\Windows\Start Menu\Programs\System Tools\Desktop.ini","%targetdir%\ProgramData\Microsoft\Windows\Start Menu\Programs\System Tools"
+//-
+//CopyDesktopIni,"%InstallSRC%\Windows\Downloaded Program Files\desktop.ini","%targetdir%\Windows\Downloaded Program Files"
+CopyDesktopIni,%InstallSRC%\Windows\Fonts\desktop.ini,%targetdir%\Windows\Fonts
+//CopyDesktopIni,%InstallSRC%\Windows\Media\Desktop.ini,%targetdir%\Windows\Media
+//CopyDesktopIni,"%InstallSRC%\Windows\Offline Web Pages\desktop.ini","%targetdir%\Windows\Offline Web Pages"
+//CopyDesktopIni,%InstallSRC%\Windows\ServiceProfiles\LocalService\AppData\Local\Microsoft\Windows\WinX\Group1\desktop.ini,%targetdir%\Windows\ServiceProfiles\LocalService\AppData\Local\Microsoft\Windows\WinX\Group1
+//CopyDesktopIni,%InstallSRC%\Windows\ServiceProfiles\LocalService\AppData\Local\Microsoft\Windows\WinX\Group2\desktop.ini,%targetdir%\Windows\ServiceProfiles\LocalService\AppData\Local\Microsoft\Windows\WinX\Group2
+//CopyDesktopIni,%InstallSRC%\Windows\ServiceProfiles\LocalService\AppData\Local\Microsoft\Windows\WinX\Group3\desktop.ini,%targetdir%\Windows\ServiceProfiles\LocalService\AppData\Local\Microsoft\Windows\WinX\Group3
+//CopyDesktopIni,"%InstallSRC%\Windows\ServiceProfiles\LocalService\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\desktop.ini","%targetdir%\Windows\ServiceProfiles\LocalService\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch"
+//CopyDesktopIni,%InstallSRC%\Windows\ServiceProfiles\LocalService\AppData\Roaming\Microsoft\Windows\SendTo\Desktop.ini,%targetdir%\Windows\ServiceProfiles\LocalService\AppData\Roaming\Microsoft\Windows\SendTo
+//CopyDesktopIni,"%InstallSRC%\Windows\ServiceProfiles\LocalService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Accessibility\Desktop.ini","%targetdir%\Windows\ServiceProfiles\LocalService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Accessibility"
+//CopyDesktopIni,"%InstallSRC%\Windows\ServiceProfiles\LocalService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Accessories\Desktop.ini","%targetdir%\Windows\ServiceProfiles\LocalService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Accessories"
+//CopyDesktopIni,"%InstallSRC%\Windows\ServiceProfiles\LocalService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Maintenance\Desktop.ini","%targetdir%\Windows\ServiceProfiles\LocalService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Maintenance"
+//CopyDesktopIni,"%InstallSRC%\Windows\ServiceProfiles\LocalService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\Desktop.ini","%targetdir%\Windows\ServiceProfiles\LocalService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools"
+//CopyDesktopIni,%InstallSRC%\Windows\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\WinX\Group1\desktop.ini,%targetdir%\Windows\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\WinX\Group1
+//CopyDesktopIni,%InstallSRC%\Windows\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\WinX\Group2\desktop.ini,%targetdir%\Windows\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\WinX\Group2
+//CopyDesktopIni,%InstallSRC%\Windows\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\WinX\Group3\desktop.ini,%targetdir%\Windows\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\WinX\Group3
+//CopyDesktopIni,"%InstallSRC%\Windows\ServiceProfiles\NetworkService\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\desktop.ini","%targetdir%\Windows\ServiceProfiles\NetworkService\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch"
+//CopyDesktopIni,%InstallSRC%\Windows\ServiceProfiles\NetworkService\AppData\Roaming\Microsoft\Windows\SendTo\Desktop.ini,%targetdir%\Windows\ServiceProfiles\NetworkService\AppData\Roaming\Microsoft\Windows\SendTo
+//CopyDesktopIni,"%InstallSRC%\Windows\ServiceProfiles\NetworkService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Accessibility\Desktop.ini","%targetdir%\Windows\ServiceProfiles\NetworkService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Accessibility"
+//CopyDesktopIni,"%InstallSRC%\Windows\ServiceProfiles\NetworkService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Accessories\Desktop.ini","%targetdir%\Windows\ServiceProfiles\NetworkService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Accessories"
+//CopyDesktopIni,"%InstallSRC%\Windows\ServiceProfiles\NetworkService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Maintenance\Desktop.ini","%targetdir%\Windows\ServiceProfiles\NetworkService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Maintenance"
+//CopyDesktopIni,"%InstallSRC%\Windows\ServiceProfiles\NetworkService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\Desktop.ini","%targetdir%\Windows\ServiceProfiles\NetworkService\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools"
+//CopyDesktopIni,%InstallSRC%\Windows\ToastData\desktop.ini,%targetdir%\Windows\ToastData
+//CopyDesktopIni,%InstallSRC%\Windows\Web\Wallpaper\Theme1\Desktop.ini,%targetdir%\Windows\Web\Wallpaper\Theme1
+//CopyDesktopIni,%InstallSRC%\Windows\Web\Wallpaper\Theme2\Desktop.ini,%targetdir%\Windows\Web\Wallpaper\Theme2
+//-
+CopyDesktopIni,%InstallSRC%\Windows\System32\desktop.ini,%targetdir%\Windows\System32
+//-
+CopyDesktopIni,%InstallSRC%\Users\Default\AppData\Local\Microsoft\Windows\WinX\Group1\desktop.ini,%TargetProfilesUserDir%\AppData\Local\Microsoft\Windows\WinX\Group1
+CopyDesktopIni,%InstallSRC%\Users\Default\AppData\Local\Microsoft\Windows\WinX\Group2\desktop.ini,%TargetProfilesUserDir%\AppData\Local\Microsoft\Windows\WinX\Group2
+CopyDesktopIni,%InstallSRC%\Users\Default\AppData\Local\Microsoft\Windows\WinX\Group3\desktop.ini,%TargetProfilesUserDir%\AppData\Local\Microsoft\Windows\WinX\Group3
+CopyDesktopIni,"%InstallSRC%\Users\Default\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\desktop.ini","%TargetProfilesUserDir%\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch"
+CopyDesktopIni,%BootSRC%\Users\Public\Libraries\desktop.ini,%TargetProfilesUserDir%\AppData\Roaming\Microsoft\Windows\Libraries
+CopyDesktopIni,%InstallSRC%\Users\Default\AppData\Roaming\Microsoft\Windows\SendTo\Desktop.ini,%TargetProfilesUserDir%\AppData\Roaming\Microsoft\Windows\SendTo
+CopyDesktopIni,"%BootSRC%\ProgramData\Microsoft\Windows\Start Menu\desktop.ini","%TargetProfilesUserDir%\AppData\Roaming\Microsoft\Windows\Start Menu"
+CopyDesktopIni,"%BootSRC%\ProgramData\Microsoft\Windows\Start Menu\Programs\desktop.ini","%TargetProfilesUserDir%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs"
+//CopyDesktopIni,"%InstallSRC%\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Accessibility\Desktop.ini","%TargetProfilesUserDir%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Accessibility"
+If,Not,ExistFile,"%TargetProfilesUserDir%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Accessories\desktop.ini",CopyDesktopIni,"%InstallSRC%\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Accessories\Desktop.ini","%TargetProfilesUserDir%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Accessories"
+If,ExistDir,"%TargetProfilesUserDir%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Administrative Tools",CopyDesktopIni,"%BootSRC%\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools\desktop.ini","%TargetProfilesUserDir%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Administrative Tools"
+//CopyDesktopIni,"%InstallSRC%\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Maintenance\Desktop.ini","%TargetProfilesUserDir%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Maintenance"
+CopyDesktopIni,"%BootSRC%\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\desktop.ini","%TargetProfilesUserDir%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools"
+If,ExistDir,"%TargetProfilesUserDir%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\StartUp",CopyDesktopIni,"%BootSRC%\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\desktop.ini","%TargetProfilesUserDir%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\StartUp"
+//-
+CopyDesktopIni,%BootSRC%\Users\desktop.ini,%targetdir%\Users
+CopyDesktopIni,%BootSRC%\Users\Public\desktop.ini,%targetdir%\Users\Public
+// Not to have desktop.ini on the desktop comment the following line
+//CopyDesktopIni,%BootSRC%\Users\Public\Desktop\desktop.ini,%targetdir%\Users\Public\Desktop
+CopyDesktopIni,%BootSRC%\Users\Public\Documents\desktop.ini,%targetdir%\Users\Public\Documents
+CopyDesktopIni,%BootSRC%\Users\Public\Downloads\desktop.ini,%targetdir%\Users\Public\Downloads
+CopyDesktopIni,%BootSRC%\Users\Public\Libraries\desktop.ini,%targetdir%\Users\Public\Libraries
+CopyDesktopIni,%BootSRC%\Users\Public\Music\desktop.ini,%targetdir%\Users\Public\Music
+CopyDesktopIni,%BootSRC%\Users\Public\Pictures\desktop.ini,%targetdir%\Users\Public\Pictures
+CopyDesktopIni,%BootSRC%\Users\Public\Videos\desktop.ini,%targetdir%\Users\Public\Videos
+//-
+//- Allready done with BootSRC
+//CopyDesktopIni,%InstallSRC%\Users\Public\desktop.ini,%targetdir%\Users\Public
+//CopyDesktopIni,%InstallSRC%\Users\Public\Desktop\desktop.ini,%targetdir%\Users\Public\Desktop
+//CopyDesktopIni,%InstallSRC%\Users\Public\Documents\desktop.ini,%targetdir%\Users\Public\Documents
+//CopyDesktopIni,%InstallSRC%\Users\Public\Downloads\desktop.ini,%targetdir%\Users\Public\Downloads
+//CopyDesktopIni,%InstallSRC%\Users\Public\Libraries\desktop.ini,%targetdir%\Users\Public\Libraries
+//CopyDesktopIni,%InstallSRC%\Users\Public\Music\desktop.ini,%targetdir%\Users\Public\Music
+//CopyDesktopIni,%InstallSRC%\Users\Public\Pictures\desktop.ini,%targetdir%\Users\Public\Pictures
+//CopyDesktopIni,%InstallSRC%\Users\Public\Videos\desktop.ini,%targetdir%\Users\Public\Videos
+//-
+//%TargetProfilesUserDir%=%baseDir%\Target\Win7PESE\Users\Default
+// Copy from Public is a little wrong with public in the name
+// Not to have desktop.ini on the desktop comment the following line
+//CopyDesktopIni,%BootSRC%\Users\Public\Desktop\desktop.ini,%TargetProfilesUserDir%\Desktop
+CopyDesktopIni,%BootSRC%\Users\Public\Documents\desktop.ini,%TargetProfilesUserDir%\Documents
+CopyDesktopIni,%BootSRC%\Users\Public\Downloads\desktop.ini,%TargetProfilesUserDir%\Downloads
+CopyDesktopIni,%BootSRC%\Users\Public\Music\desktop.ini,%TargetProfilesUserDir%\Music
+CopyDesktopIni,%BootSRC%\Users\Public\Pictures\desktop.ini,%TargetProfilesUserDir%\Pictures
+CopyDesktopIni,%BootSRC%\Users\Public\Videos\desktop.ini,%TargetProfilesUserDir%\Videos
+//-
+//CopyDesktopIni,%tw%\ToastData\desktop.ini,%targetdir%\Windows\ToastData
+//-
+Run,%ScriptFile%,ManualCreateDesktopIniFiles
+
+[ManualCreateDesktopIniFiles]
+Set,%F%,"%targetdir%\ProgramData\Microsoft\User Account Pictures"
+Set,%W%,%F%\desktop.ini
+If,Not,ExistDir,%F%,DirMake,%F%
+FileCreateBlank,%W%
+TxtAddline,%W%,"[.ShellClassInfo]",Append
+TxtAddline,%W%,"LocalizedResourceName=@Windows.UI.Immersive.dll#$c-23570",Append
+ShellExecute,Hide,%AttribexeFolder%Attrib.exe,"+A +H +S +R #$q%W%#$q"
+ShellExecute,Hide,%AttribexeFolder%Attrib.exe,"+S #$q%F%#$q"
+//-
+Set,%F%,%TargetProfilesUserDir%\Favorites
+Set,%W%,%F%\desktop.ini
+If,Not,ExistDir,%F%,DirMake,%F%
+FileCreateBlank,%W%
+TxtAddline,%W%,"[.ShellClassInfo]",Append
+TxtAddline,%W%,"LocalizedResourceName=@#$pSystemRoot#$p\system32\shell32.dll#$c-21796",Append
+TxtAddline,%W%,"IconResource=#$pSystemRoot#$p\system32\imageres.dll#$c-115",Append
+TxtAddline,%W%,"IconFile=#$pSystemRoot#$p\system32\shell32.dll",Append
+TxtAddline,%W%,"IconIndex=-173",Append
+ShellExecute,Hide,%AttribexeFolder%Attrib.exe,"+A +H +S +R #$q%W%#$q"
+ShellExecute,Hide,%AttribexeFolder%Attrib.exe,"+S #$q%F%#$q"
+//-
+Set,%F%,%TargetProfilesUserDir%\Links
+Set,%W%,%F%\desktop.ini
+If,Not,ExistDir,%F%,DirMake,%F%
+FileCreateBlank,%W%
+TxtAddline,%W%,"[.ShellClassInfo]",Append
+TxtAddline,%W%,"LocalizedResourceName=@#$pSystemRoot#$p\system32\shell32.dll#$c-21810",Append
+TxtAddline,%W%,"IconResource=#$pSystemRoot#$p\system32\imageres.dll#$c-185",Append
+TxtAddline,%W%,"DefaultDropEffect=4",Append
+TxtAddline,%W%,"[LocalizedFileNames]",Append
+TxtAddline,%W%,"RecentPlaces.lnk=@shell32.dll#$c-37217",Append
+TxtAddline,%W%,"Desktop.lnk=@shell32.dll#$c-21769",Append
+TxtAddline,%W%,"Downloads.lnk=@shell32.dll#$c-21798",Append
+ShellExecute,Hide,%AttribexeFolder%Attrib.exe,"+A +H +S +R #$q%W%#$q"
+ShellExecute,Hide,%AttribexeFolder%Attrib.exe,"+S #$q%F%#$q"
+
+[ManualCreateDesktopIniFiles_NotUsedCurrently]
+Set,%F%,%TargetProfilesUserDir%\Contacts
+Set,%W%,%F%\desktop.ini
+If,Not,ExistDir,%F%,DirMake,%F%
+FileCreateBlank,%W%
+TxtAddline,%W%,"[.ShellClassInfo]",Append
+TxtAddline,%W%,"LocalizedResourceName=@#$pCommonProgramFiles#$p\system\wab32res.dll#$c-10100",Append
+TxtAddline,%W%,"InfoTip=@#$pCommonProgramFiles#$p\system\wab32res.dll#$c-10200",Append
+TxtAddline,%W%,"IconResource=#$pSystemRoot#$p\system32\imageres.dll#$c-181",Append
+ShellExecute,Hide,%AttribexeFolder%Attrib.exe,"+A +H +S +R #$q%W%#$q"
+ShellExecute,Hide,%AttribexeFolder%Attrib.exe,"+S #$q%F%#$q"
+//-
+Set,%F%,"%TargetProfilesUserDir%\Saved Games"
+Set,%W%,%F%\desktop.ini
+If,Not,ExistDir,%F%,DirMake,%F%
+FileCreateBlank,%W%
+TxtAddline,%W%,"[.ShellClassInfo]",Append
+TxtAddline,%W%,"LocalizedResourceName=@#$pSystemRoot#$p\system32\shell32.dll#$c-21814",Append
+TxtAddline,%W%,"IconResource=#$pSystemRoot#$p\system32\imageres.dll#$c-186",Append
+ShellExecute,Hide,%AttribexeFolder%Attrib.exe,"+A +H +S +R #$q%W%#$q"
+ShellExecute,Hide,%AttribexeFolder%Attrib.exe,"+S #$q%F%#$q"
+//-
+Set,%F%,%TargetProfilesUserDir%\Searches
+Set,%W%,%F%\desktop.ini
+If,Not,ExistDir,%F%,DirMake,%F%
+FileCreateBlank,%W%
+TxtAddline,%W%,"[.ShellClassInfo]",Append
+TxtAddline,%W%,"LocalizedResourceName=@#$pSystemRoot#$p\system32\shell32.dll#$c-9031",Append
+TxtAddline,%W%,"IconResource=#$pSystemRoot#$p\system32\imageres.dll#$c-18",Append
+TxtAddline,%W%,"[LocalizedFileNames]",Append
+TxtAddline,%W%,"Indexed Locations.search-ms=@searchfolder.dll#$c-32820",Append
+TxtAddline,%W%,"Everywhere.search-ms=@searchfolder.dll#$c-32822",Append
+ShellExecute,Hide,%AttribexeFolder%Attrib.exe,"+A +H +S +R #$q%W%#$q"
+ShellExecute,Hide,%AttribexeFolder%Attrib.exe,"+S #$q%F%#$q"
+
+[PCopy_LFile]
+StrFormat,FILENAME,#1,#2
+StrFormat,PATH,#1,#1
+//If,Not,#1-,Equal,-,StrFormat,RTRIM,#1,1,#1
+If,Not,ExistDir,%TargetDir%\#1,DirMake,%TargetDir%\#1
+BootCopy,#1,#2
+
+[PCopy_LFileMui]
+StrFormat,FILENAME,#1,#2
+StrFormat,PATH,#1,#1
+//If,Not,#1-,Equal,-,StrFormat,RTRIM,#1,1,#1
+If,Not,ExistDir,%TargetDir%\#1,DirMake,%TargetDir%\#1
+BootCopyMui,#1,#2
+
+[PCopy_Dir_082]
+StrFormat,PATH,#1,#2
+If,ExistDir,%InstallSRC%\#1,DirCopy,%InstallSRC%\#1,%TargetDir%\#2
+Else,Begin
+If,ExistDir,%BootSRC%\#1,DirCopy,%BootSRC%\#1,%%TargetDir%\#2
+End
+
+[PCopy_Dir_080]
+StrFormat,PATH,#1,#2
+Call,DirCopy,%InstallSRC%\#1,%TargetDir%\#2
+//Echo,%ExitCode%,Warn
+Set,#9,0
+If,%ExitCode%,Equal,0,Set,#9,1
+If,%ExitCode%,Equal,4,Set,#9,1
+If,#9,Equal,1,Call,DirCopy,%BootSRC%\#1,%%TargetDir%\#2
+//If,#9,Equal,1,Echo,%ExitCode%,Warn
+
+[PCopy_Dir_077.102]
+StrFormat,PATH,#1,#2
+Call,DirCopy,%InstallSRC%\#1,%TargetDir%\#2
+//Echo,%ExitCode%,Warn
+Set,#9,0
+If,%ExitCode%,Equal,0,Set,#9,1
+If,%ExitCode%,Equal,4,Set,#9,1
+If,#9,Equal,1,Call,DirCopy,%BootSRC%\#1,%%TargetDir%\#2
+//If,#9,Equal,1,Echo,%ExitCode%,Warn
+
+[PBoot_Copy]
+If,Not,ExistFile,%TargetDir%\#1#2,Begin
+If,ExistFile,%BootSRC%\#1#2,FileCopy,%BootSRC%\#1#2,%TargetDir%\#1
+End
+
+[PBoot_CopyMui]
+If,Not,ExistFile,%TargetDir%\#1#2,Begin
+BootCopy,#1,#2
+If,ExistFile,%BootSRC%\#1%DistLang%\#2.mui,Begin
+If,Not,ExistFile,%TargetDir%\#1%DistLang%\#2.mui,FileCopy,%BootSRC%\#1%DistLang%\#2.mui,%TargetDir%\#1%DistLang%
+End
+Else,Begin
+If,Not,%DistLang%,Equal,en-US,If,ExistFile,%BootSRC%\#1en-US\#2.mui,Begin
+If,Not,ExistFile,%TargetDir%\#1en-US\#2.mui,FileCopy,%BootSRC%\#1en-US\#2.mui,%TargetDir%\#1en-US
+End
+End
+End
+
+[PBoot_CopySys32]
+If,Not,ExistFile,%t32%\#1,Begin
+If,ExistFile,%b32%\#1,FileCopy,%b32%\#1,%t32%
+End
+
+[PBoot_CopySys32Mui]
+BootCopySys32,#1
+If,ExistFile,%b32%\%DistLang%\#1.mui,Begin
+If,Not,ExistFile,%t32%\%DistLang%\#1.mui,FileCopy,%b32%\%DistLang%\#1.mui,%t32%\%DistLang%
+End
+Else,Begin
+If,Not,%DistLang%,Equal,en-US,If,ExistFile,%b32%\en-US\#1.mui,Begin
+If,Not,ExistFile,%t32%\en-US\#1.mui,FileCopy,%b32%\en-US\#1.mui,%t32%\en-US
+End
+End
+
+[PBoot_CopySysWoW]
+If,Not,ExistFile,%tWow%\#1,Begin
+If,ExistFile,%bWow%\#1,FileCopy,%bWow%\#1,%tWow%
+End
+
+[PBoot_CopySysWoWMui]
+BootCopySysWoW,#1
+If,ExistFile,%bWow%\%DistLang%\#1.mui,Begin
+If,Not,ExistFile,%tWow%\%DistLang%\#1.mui,FileCopy,%bWow%\%DistLang%\#1.mui,%tWow%\%DistLang%
+End
+Else,Begin
+If,Not,%DistLang%,Equal,en-US,If,ExistFile,%bWow%\en-US\#1.mui,Begin
+If,Not,ExistFile,%tWow%\en-US\#1.mui,FileCopy,%bWow%\en-US\#1.mui,%tWow%\en-US
+End
+End
+
+[PInstall_Copy]
+If,Not,ExistFile,%TargetDir%\#1#2,Begin
+If,ExistFile,%InstallSRC%\#1#2,FileCopy,%InstallSRC%\#1#2,%TargetDir%\#1
+End
+
+[PInstall_CopyMui]
+InstallCopy,#1,#2
+If,ExistFile,%InstallSRC%\#1%DistLang%\#2.mui,Begin
+If,Not,ExistFile,%TargetDir%\#1%DistLang%\#2.mui,FileCopy,%InstallSRC%\#1%DistLang%\#2.mui,%TargetDir%\#1%DistLang%
+End
+Else,Begin
+If,Not,%DistLang%,Equal,en-US,If,ExistFile,%InstallSRC%\#1en-US\#2.mui,Begin
+If,Not,ExistFile,%TargetDir%\#1en-US\#2.mui,FileCopy,%InstallSRC%\#1en-US\#2.mui,%TargetDir%\#1en-US
+End
+End
+
+[PInstall_CopySys32]
+If,Not,ExistFile,%t32%\#1,Begin
+If,ExistFile,%i32%\#1,FileCopy,%i32%\#1,%t32%
+End
+
+[PInstall_CopySys32Mui]
+InstallCopySys32,#1
+If,ExistFile,%i32%\%DistLang%\#1.mui,Begin
+If,Not,ExistFile,%t32%\%DistLang%\#1.mui,FileCopy,%i32%\%DistLang%\#1.mui,%t32%\%DistLang%
+End
+Else,Begin
+If,Not,%DistLang%,Equal,en-US,If,ExistFile,%i32%\en-US\#1.mui,Begin
+If,Not,ExistFile,%t32%\en-US\#1.mui,FileCopy,%i32%\en-US\#1.mui,%t32%\en-US
+End
+End
+
+[PInstall_CopySysWoW]
+If,Not,ExistFile,%tWow%\#1,Begin
+If,ExistFile,%iWow%\#1,FileCopy,%iWow%\#1,%tWow%
+End
+
+[PInstall_CopySysWoWMui]
+InstallCopySysWoW,#1
+If,ExistFile,%iWow%\%DistLang%\#1.mui,Begin
+If,Not,ExistFile,%tWow%\%DistLang%\#1.mui,FileCopy,%iWow%\%DistLang%\#1.mui,%tWow%\%DistLang%
+End
+Else,Begin
+If,Not,%DistLang%,Equal,en-US,If,ExistFile,%iWow%\en-US\#1.mui,Begin
+If,Not,ExistFile,%tWow%\en-US\#1.mui,FileCopy,%iWow%\en-US\#1.mui,%tWow%\en-US
+End
+End
+
+[PRequire_DriverStore]
+StrFormat,SPLIT,#1,.inf_,1,%DriverStoreDir%
+If,ExistDir,%i32%\DriverStore\FileRepository\%DriverStoreDir%.inf*,DirCopy,%i32%\DriverStore\FileRepository\%DriverStoreDir%.inf*,%t32%\DriverStore\FileRepository
+Else,DirCopy,%b32%\DriverStore\FileRepository\#1,%t32%\DriverStore\FileRepository
+
+[P_CopyDesktopIni]
+If,ExistFile,#1,Begin
+If,Not,ExistDir,#2,DirMake,#2
+FileCopy,#1,#2
+ShellExecute,Hide,%AttribexeFolder%Attrib.exe,"+S +R #$q#2#$q"
+End
+
+[PExtractWinReSys32]
+// #1=File
+ExtractWinReWim,#1,windows\System32,%target_sys%,Warn
+
+[PExtractWinReSys32Mui]
+// #1=File
+ExtractWinReWim,#1,windows\System32,%target_sys%,Warn
+// Mui file
+ExtractWinReWim,#1.mui,windows\System32\%DistLang%,%target_sys%\%DistLang%
+If,Not,ExistFile,%target_sys%\%DistLang%\#1.mui,ExtractWinReWim,#1.mui,windows\System32\en-US,%target_sys%\en-US,Warn
+//Else,Echo,"Extraction of winre Successful for: #1.mui"
+
+[PExtractWinReWim]
+// #1=File #2=Source Folder #3=Target Folder #4=Warn if not exist
+Echo,"Extracting #1 from winre.wim #2 to #3..."
+If,ExistFile,%Tools%\7z.exe,ShellExecute,Hide,%Tools%\7z.exe,"e -y #$q%Source_Sys%\Recovery\winre.wim#$q -i!#$q#2\#1#$q -o#$q#3#$q"
+Else,Begin
+If,ExistFile,%Tools%\%SysType%\7z.exe,ShellExecute,Hide,%Tools%\%SysType%\7z.exe,"e -y #$q%Source_Sys%\Recovery\winre.wim#$q -i!#$q#2\#1#$q -o#$q#3#$q"
+Else,ShellExecute,Hide,%Tools%\7z.exe,"e -y #$q%Source_Sys%\Recovery\winre.wim#$q -i!#$q#2\#1#$q -o#$q#3#$q"
+End
+If,#4,Equal,Warn,If,Not,ExistFile,#3\#1,Echo,"Extraction of winre FAILED for #1 :(",Warn
+//If,#4,Equal,Warn,If,Not,ExistFile,#3\#1,Message,"Extraction of winre FAILED for: #1 :(",Error
+//If,#4,Equal,Warn,If,ExistFile,#3\#1,Echo,"Extraction of winre Successful for: #1"
+
+[History-Old]
+History016=ChrisR - add bootmgr.exe.mui in boot\%distlang for display language at startup
+History017=rpaz - Lancelot - adjust copy of KBD*.DLL files checkbox Add all Keyboards
+History017=rpaz   - added needed file to allow tray icon control (Hide/show/notifications)
+History018=ChrisR - add mscms.dll
+History019=Lancelot - no duplicate options in menu.lst
+History020=ChrisR - comment bootres.dll for Vista start bar for fast boot (instead win7 startup animation)
+History021=Dera's fix for distlang
+History022=Homes32 - Moved mount check for install.wim into 01-PreConfig
+History023=ChrisR - add blbres.dll, blb_ps.dll required for recovery environment in standard files copy
+History024=Homes32 - Added shortcut generation and config for Windows Recovery Env Tools, Cleaned up interface
+History025=JFX - sfc.dll - lz32.dll - crtdll.dll can be added to base files http://www.msfn.org/board/topic/149758-win7pe-se/page__view__findpost__p__956891
+History026=Lancelot - AdmTools_CheckBox hidden from interface - reported causing double shortcut appears along with mmc (+adding manual names....). (tip: better add any adm. tools through mmc plugin) // code cosmetics (quotes removed etc etc)
+History027=Dera - Add Windows Time service w32time
+History027b=ChrisR : retrieve Time Zone Information from install.wim in offline system hive, for system locale auto
+History028=Lancelot IniVariables added
+History029=ChrisR - Font control panel - set the registry permission on W32Time service - ifsutil.dll dependence of xcopy,...
+History030=ChrisR - Additional Font (from Install.wim) commented, Preferred an additional Fonts plugin (Reason: reg font entries have localized names) http://TheOven.org/index.php?topic=206
+History031=ChrisR - Reorganization of sections - Improved echo messages - Copy only used bootsrc mui files for standard file copy.
+History032=Lancelot - minor workarounds for general compatibility
+History032b=2aCD - add utildll.dll for Taskmanager
+History033=Lancelot - SetAcl Success checks - warn if failure
+History034=2aCD - reduce build warnings for overwrite regkeys
+History035=ChrisR - NoWarnROW implemented
+History037=ChrisR - Added support for locale Auto.
+History038=ChrisR - Mui for bootres.dll added or removed (win7 startup animation - Vista start bar)
+History039=ChrisR - renamed Win8PESE folder
+History040=ChrisR - Process Locale review and divided in keyboard and time zone. Called "HostOS Import Manager plugin" and TimeZone plugin
+History041=ChrisR - Following my inexplicable suspenssion of reboot.pro (:, the link is logically deleted.
+
+[Cache_SCD_Info_Additional_Plugin]
+//IniRead,%ScriptFile%,Main,Selected,%t%
+//If,%t%,Equal,True,Begi-n
+Run,%api%,Cache_SCD_Info_Additional_Plugin_ML,#1,#2,#3,#4,#5,#6,#7,#8,#9
+//-
+IniWrite,%ProjectTemp%\%SFName%_Unique.ini,Unique,%Plugin_FName_Sub%_|_Custom_CheckBox,%Custom_CheckBox%
+If,%Custom_CheckBox%,Equal,True,Begin
+Call,RetrieveFolderUniqueID,%Custom_FileBox%
+IniWrite,%ProjectTemp%\%SFName%_Unique.ini,Unique,%Plugin_FName_Sub%_|_Custom_CheckBox_True_RetrieveFolderUniqueID,%RetrieveFolderUniqueID%
+If,%RetrieveFolderUniqueID%,Equal,1,IniWrite,%ProjectTemp%\%SFName%_Unique.ini,Unique,%Plugin_FName_Sub%_|_Custom_CheckBox_True_RetrieveFolderUniqueID,"%RetrieveFolderUniqueID% : Directory Not Exists"
+If,%RetrieveFolderUniqueID%,Equal,2,IniWrite,%ProjectTemp%\%SFName%_Unique.ini,Unique,%Plugin_FName_Sub%_|_Custom_CheckBox_True_RetrieveFolderUniqueID,"%RetrieveFolderUniqueID% : Directory exists but empty"
+End
+//-
+Echo,"Cache_SCD_Info_Additional_Plugin - Finish - %Plugin_FName%"
+//En-d
+
+[AuthorEncoded]
+authorlogo.jpg=3186,4250
+Copy.jpg=2801,3735
+Logo=Copy.jpg
+
+[EncodedFile-AuthorEncoded-authorlogo.jpg]
+lines=1
+0=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
+1=6Q0j/KUGIYbwjJf+vJUF0qZW8E1Cbehl44j8p/aJiAyBdhT/wLWgfSDnic40ssLcnIL8rJT8/XyypIZxgFIwuE8kBoVR7s8vIysg4MTABMRQbu9CEv8QEAAAACAAAAKQAAACUMAAAAAAAAAQAAAAAAAAAAAAAA
+
+[EncodedFile-AuthorEncoded-Copy.jpg]
+lines=0
+0=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
+
+[InterfaceEncoded]
+opendir.bmp=571,762
+DoubleJDesignRavenna3dArrowDown0016016.bmp=622,830
+BokehliciaCaptivaSoftwareupload0016016.bmp=676,902
+AmperossQetto2Move0016016.bmp=893,1191
+
+[EncodedFile-InterfaceEncoded-opendir.bmp]
+lines=0
+0=eJyVkt1LU3EYx382esMuBFEKE8GLLL0IbyYhpEUI4aKytilTFN1xOrvxohpI9/0FlYESXUR2EXmxi4S9hYF4IZhOSdZMzJdtx+HwvO1sh2/P8cyxYFh9+TzPxXm+v+9z+J1z847ZxA5lprpMVZarEnbeGNC8vNSoI+E/5Z6YZs++Mk+QPTnkaaiAo4ee0LVPEcN/4tViTRjuNB7Jeh/cAxfPcEnNtY8hAW4ZwwqGVbCxL3k/D5zxC71x9AjoTsGRgG0jbY2K1siBfV2ybyjd2xkHr7HHIcO/CZh8ApdEfwIDKXASnAr6BDh4dG5mbVHJui727ar0VuQ/924tCtyNoTwgGFQGdZyxrHMfLgUuFYMShg4wIOrhVTNb3zVYdtCbQD+vQ4sqQwKhH/cLFQGx1C+W+EQWlC/Nyw0LqRUVt7fQtZPDvgtrDB2JHD1JnJrl8/dpjqjLipb3P9zG/Ti+qQirWJY1Yi0L06pW6F+QtJZf+grCEkOYrus5q/iJ06tgiwoLZ+0v3vyRnwEdoailtG6ufllVN1FXO36x6Pcd8wYogXJOrqDsB66+rTdPtV7/aGmcar0weeX4f6N2srrpQ/ON6Xvt3i7q9e+bz74uvqVQt7wPOn0c9b86DbV9tjlnR6n/o39kzmNQdPoblHVTL3ic484vSM1LySzSS8otYBgFIw6YMUPoD4zY5WddWriPgQkAk7cIYWOapDwBAAAAAgAAACcAAADwAQAAAAAAAAEAAAAAAAAAAAAAAA
+
+[EncodedFolders]
+Icons
+
+[Icons]
+msfn_modrica.ico=712,950
+TheOven.ico=947,1263
+
+[EncodedFile-Icons-msfn_modrica.ico]
+lines=0
+0=eJztkT1ME2EYx/+PSMUPlCriFyitXxQVrfjBCWo9FfVEkUrBnqLCcQicmDQNU0NiSMNAmg6kYSAXBpNjIDkGkjKQ3GRSB5I6kNSBpAwOHW9kxOdAHI1x5n95796P532e3/85gPgpKwO/S9BfDFQAqOHBW6jG5v7ftL6+DmtcQG7RgNbmgTmWQEqVsfYzg/y8BnNOQ1QVYS/r0EdE6NNBZL8EEe/2If81DmNYQ2Y+hvSkjPxqBokRGfGQhPwPE+aIH+a4hEREQmaG46Y4z0oa0S4/jCEZ+oAEc0ZGdk5H4VuKYwWYSYVzScjN8vmQgliXB4XvBmIcmx7zIzurwJoQEQ35EI8wy2IMufkojFEB6WQCa6sW8otx2MxiM4MW9qOwbDI/52DmaLfA+XTYSymkBhSuEUR+IQo9oiE3E2T/IoyIguw010uKyDKfNcX87Nvm3GuraWhcOxrysEeDvQaZPQHTqT8mMJuADPMZwzLfZ3+jftjcS3vF4nse9uODzfXjqg+FJfbNHLkFg1mcfjj1OQ/3wUoKzCEjM+nkYs/MYvE8PeF8pb/+021t65/k7XX9UbUX3jbP00+b+iiVVnjv7d7/qHKgo6MuFKobelzaW+N/UtnXHvoQDu/oq68/52o++EB7d6D9os8XDnc1PXQ13zhP1PqSaOdRHqqruayE6LLK8zDvq8pgrUh08hXRG45pPaMMvq4lun2I6LnqnAfcLbzec5ZI2EfU1MfrW0RXDhNdOE507FLAfbOBtnTiqhhwy1WN77s3dDp4906gs7ylqmFDjY1v97441XOtfNf133p2pLgHRZ3uLd3vL8Jn+v/WOXd/ATGH6nB4nBPILU7Li8/NTynKTE7Uy0zOZxgFIwnUsULoCibs8kFbs+8zMAEAw7kJvLaP9h8BAAAAAgAAACwAAAB4AgAAAAAAAAEAAAAAAAAAAAAAAA
+
+[EncodedFile-Icons-TheOven.ico]
+lines=0
+0=eJyNk39M1GUcx7+utv5o6jkDbqvJxZGiCLhqMErg7oJLoJMYIGfdiVOYt8kfbR1iEnmhxw9JECj5oekVingeLER2Aue+F2eOGDlbWbSg8Y8ic2HsXGRz31ff+zZYv9z6PHs/P977vJ/n+TyfzyMIy+SmUglyrxFsjwtCuCAIMTJkSmb+5P+vTUxM6JqdToen9TgXO+rwfVjDhYYDVBbnOkZHR3WP0s3eua3r2F8uNm6MRtykYcK0ie9a7Eg3biCNjzN/6Rw9lbvpam9w/NeZVfl5XDU8h1SVC3tykfa+xt0KI5O9HUgzd5Dm5pAWfmW8uwn7G+lL95AePtQNnOjAnabG+b6WrKOrSD+iYvqgDqpNzL+bwc1qMz/0tTE15uX+3AyDZ1pY1A8HBkWLJRzt8SeJGFOjHlWzVp5PlxvAshVpRzYUy2NFNsGdrzBtS6e/Io+WuhrlDiXdVlKdy4kQwxRtmHs5vsqXoHQbfLADDmyX9Wao2gkV8rp6Fw+adnMsO0sM6VNcSUQPRbHh6gY0gWdRn1Ux5doLR8ug3g4XaqG8FM7Xydx+8DbS1bCFXVujlRi2nEkjcySL1EAqib4k1vnWcepTM5J4HqnzI2isAc9JOQcXkbrakb4awNipJdwfRlF9oZh5Uo8lYCW5L4nYc+uJuxRHa3cx0uyPMHOT21/30+Yqot1dwqi/ldNdb6HuVSmxbj79MqmOBPHtMTux9c/Q3GkjrzGFu7OTSL/fJ3Ctk8jGlUQFtKz5UoO6L4ww7ypFu6jPLzPpCvpyMH6crORXmvoJ6d49FhaCxNSuJi2gwxAwkCgmEj8Sz9phLZFXIlF/HsHmpueVNzTXvi5q5LxLwXmkW7eQJie5/v0Vnjq0ArN/OwW+AjKHMzF4DSRdTiZ+KIGozyKx7tu2VItF+wod3W8W8CCkDwZZCP6MrS2X9c1PE+eKJX8oj0JfIaZBExneV8k4krJUQ4s20nZIvGy18o3Lpewh16YSR31PGQnyHqF3Kv6ihLRjL2J7Z8+//lLvWZdurKdJ/Lb2Pfr1BnrTMxiwWGjNMbLm4GqMn6TwwuEYsdxZ9sh/GLJTNXbHtROHxety/t2lBUqMbo9bF8I/fX9Z6dH7n/DoHY959EIIy/4C4e9wyPDL/HQIsu9vOR79H7+WMMh4nOMOyUj1L0vN08tMzmcYBSMO1LFA6Axm7PKWuxd/ZGACAAyHB6XxvDdrAQAAAAIAAAAnAAAAaAMAAAAAAAABAAAAAAAAAAAAAAA
+
+[DownloadXXX]
+Call,DownloadXQ
+
+[UploadXXX]
+Call,UploadXQ
+
+[EncodedFile-InterfaceEncoded-DoubleJDesignRavenna3dArrowDown0016016.bmp]
+lines=0
+0=eJzNk09Ik2Ecxw06BF2KqG5ih1EgYZZu7+v7vnu3d++2MpelRFHgQZEaJLVIXSxrW4Wauf7Nwha2rQ7dOgT9IQT1EkQHi+hSHfRSUZrMcp389PjSoUib3vrB9/I8fD78fr+Hxwi0LS+yyi6ySWSVyGqRZUUl1rnr1/3vBfy3+TTxkabuAzx4dp+lsu/G31LRXIrjaCmeVjtfpj4v2jH+YQwpWIYc3orctgUptJkT/UcWxc/1rLXYqYpKqGcklEglcns5DuF48uLhPx2TUxOYIRWlU8PZraOdU1GjMsop4RO9+DucfM1NzuvIfctR3Wai9hq4rvrREybOCy608xpqrAqlQzhObiOSbv2Ln8nPsDvsZ33dSoob1mE7XIIsetAvCUePG63TiRpXUE47rJ0MvRz8wzH9fZqR0SHSj1LUhn2s8a6gMi7hTm7HddmLftHA2aVT2mJjY3Mx7naJ/I/8vHN0Zc5avKNLw+gP4O7bgeuKD73XQyDqI5QM8ur96IJ7jKUiFi8nDDwDezBuCsf1amsnA4Opgm8Y7jtu8UrSj3lnL+btOjypXRg3dpIdThfkjyWCFu9M1eC7tx/vXeFIC8etWjKL4IPdTRZfFqtAvua1PJ5sPWamnuxIpiD/9Plj4ukIh3oaqGk3KG+0sWHfWhp7DvJm7PWS/9FcZmdnF+R+AlbU23p4nNNyyS9Nykn1ckktzkzPC0osS83LSzROcSwqyi93yS/PMzAwNAMivaTcAoZRMPxAGQuEZmPCLu9y8YwcAxMAHjMRfb+2diEBAAAAAgAAAEQAAAAGAgAAAAAAAAEAAAAAAAAAAAAAAA
+
+[EncodedFile-InterfaceEncoded-BokehliciaCaptivaSoftwareupload0016016.bmp]
+lines=0
+0=eJytU21LWmEYbrAfsP0De4H2pRcqRq+0RllUZkav1O+YIH2JPvUhKKJfUE3aaCNQQR3pYWDTPCpBMKUxSczjZDB0Q8UPV/d9L0tdg33YAxfn5nq5n+c85z4vDa8e18l6TnhGeEJ4SnhUpxP+xa1euQD8V5RKJeTzeeRyOWSzWQHXzLH2t1yxWEQikYDb7cXu7iHW1/exuron4Jo51tjD3tqsw3GC+fn36O39hJ6eh8Eae9hb2SMYjGB42Iu+Pv8/gb2cKb+v2fwGAwOBGvhpTzfhg9S1utn8FuW7MplOMDQUwMhIgHrfY3Mzio2Nz1Uce9jLGc5mMhni/WhuPoROt4/6+td3ODpKwGqNV3HsYS9nOBuLfUFLyzG6ulzEnVXB4/kOpzPzB89eznD24iKKxkar9NPrg7fwYG7OBp/vGxRFw+ysDaOjnjudvZzhbDR6iY4OO/V0YHJSxdiYiq2trygUSri+zuLq6ofU29tx0djT2WmTDGdTqbRw3d1O+jYfMTGhYno6TL1zKC+uTaawaDrdHtrajiWjaWn5BgsLfhgMIZoPL6amQlKvrJzT/gUkkwUsL58Lx2hoOJAnZ8rzbLF4YTSG6d18dAY3nfMUg4MK7RmULGu/oUqea4tFqZi/JGZmwnJGgyEg8zU+fip3otcrdJcRusMQ2tt5vl3iVdVU1T9gt6exuMi+exiNZ2htfYempgNBf78LS0sRsPehf1DTfoq2sxPH2tolnTEm4Jo51tLpX1XZG70Y6I54nNNyys9OzcjJTM5MdE4sKMksSwzOTyspTyxKLS3IyU9MMTAwNAMivaTcAoZRMPxAGQuEtmHCLs9kcFmVgQkAJ9URXc7wHxQBAAAAAgAAAEQAAAA8AgAAAAAAAAEAAAAAAAAAAAAAAA
+
+[CompareEditXXX]
+Call,CompareEdit
+
+[EncodedFile-InterfaceEncoded-AmperossQetto2Move0016016.bmp]
+lines=0
+0=eJxtk1lIVFEYxw16agEVzTRncRtt0cx0NCu0QlsgyyCih7Cgh6KFNgQzSsqnFohUEm3FlqmsVGxxxoxSyYkpTcctsiKXtCZ1mPXee878++5o4YMf/DjfnXN+//sdmLt2s3amj7e0RAzhO8kMH7XPv/KfPcF0NXd7RXRg3ufCoDMD+nkFQ8Z5BYOTDBmDCgYNgXlfCudsq4yZzg3I7ToSfMHmVJQBilLi6pT1X097IZdsroBc87GpblB+zwHVNUBJ50JLBAQUSVhQIkJB/X+KBYQWCd4s1XUgKL/3kOz6HTYpQ4scbq9fLsL/ooAV50ahueKE8oYI1TWBoLVcgLKMKJWf6T1XHILv8WaVothyMlwHqG+KmHVJxKHbFnjs49j5zAnf2xyqexLC74hewm6JdE6AmjLDH1BGseVU2E17VeRjIIBmPFhhASQnnneK0Fy2IYaIKHEi9C6DXxmDWscQeY+yKkREPpLfaa+JuO/Wh5C/9bEd4C7INWyxw/bbCmnUiuZeK9bpHDhfY0FkuQvKSo6ohxKiqoCIu+76qEp3XUQtkFDL0DYm2x4863bjdAdwthfY0QKsMYjgYNDTAQVlqJ9yLHwBaB66DdFPhbol9TRLDUPsS4bWMQ+sYw6kVjuwhmbaXzuOvTVWVJtpPkqpbx/DYp0b0a+AmGrBsKhWMMS+AWL1dDcipZGhctiDHSYRbRY3OSIhYdwlYaI4cppdCGsAFr8Q6uNeiU/iacalrxkSyI1ropxGCXEtDGs/cmxq50hrlvCkx+G9W/F3DzQNDLITpxerEhrFE0ntwLK3DInvGLTvGZI/0BytHInka0wce9tpDo+E0gEPwuncUkJ2ljeJuUlGzNcamS3pA8iVkEJO6ieOVR2EmXpaN3Zz7PviQbyJPMrXfgSSjcy+2mQPlv+DaR3CrrSvQGon0caxmry0Lo508tJ7KIf6BLqHvLeyC0j/RpiFnKnfQEa3sDujj1syR4CMn0AmsZ76DSMTvfe3X8C6Pv4n0yzsme4bzO6yB2f1s6NZ/VyX9YPVZU+yhcjqlx5kD9FetyNkqvMXP3mcf3ick3XMLUgtyi8uDkwtKck38s0vSzUwMDQDIr2k3AKGUTDMgRkLhFZixi4vra37hIEJABkJC8Gkai7oAQAAAAIAAAA3AAAAIgMAAAAAAAABAAAAAAAAAAAAAAA
+

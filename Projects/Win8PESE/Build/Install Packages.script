@@ -1,0 +1,434 @@
+[Main]
+Title=Install Packages
+Type=Plugin
+Author=ChrisR
+Description=(Win8PESE) Installs Multiple specified packages .cab or .msu in WinPESE image.
+Credits=http://TheOven.org
+Version=006
+Download_Level=2
+Level=1
+Selected=False
+Mandatory=False
+NoWarning=False
+Contact=http://TheOven.org
+Date=2017.11.11
+Depend=
+Disable=
+Web1=http://w8pese.cwcodes.net/Projects/Win8PESE/Build/Install%20Packages.script
+CertifiedBy=
+Certification=
+HistoryNotes01=eg: "E:\_Win7PESE\Target\Win7PESE\Windows\system32\dism\dism.exe" /image:"E:\_Win7PE_SE\Mount\Win7PESE\Source\BootWimSrc" /Add-Package /PackagePath:"C:\Program Files\Windows AIK\Tools\PETools\x86\WinPE_FPs\winpe-hta.cab"
+HistoryNotes02=eg: "E:\_Win7PESE\Target\Win7PESE\Windows\system32\dism\dism.exe" /image:"E:\_Win7PE_SE\Mount\Win7PESE\Source\BootWimSrc" /Add-Package /PackagePath:"C:\Program Files\Windows AIK\Tools\PETools\x86\WinPE_FPs\en-us\winpe-hta_en-us.cab"
+HistoryNotes03=eg: "E:\_Win8PE_SE\Target\Win8PESE\Windows\system32\dism\dism.exe" /image:"E:\_Win8PESE\Mount\Win8PESE\Source\BootWimSrc" /Add-Package /PackagePath:"C:\Program Files (x86)\Windows Kits\8.0\Assessment and Deployment Kit\Windows Preinstallation Environment\x86\WinPE_OCs\WinPE-HTA.cab"
+HistoryNotes04=eg: "E:\_Win8PE_SE\Target\Win8PESE\Windows\system32\dism\dism.exe" /image:"E:\_Win8PESE\Mount\Win8PESE\Source\BootWimSrc" /Add-Package /PackagePath:"C:\Program Files (x86)\Windows Kits\8.0\Assessment and Deployment Kit\Windows Preinstallation Environment\x86\WinPE_OCs\en-us\WinPE-HTA_en-us.cab"
+History003=ChrisR - Grant full access for All users
+History004=ChrisR - Implemented HostOSVersion - Date:2016.09.02
+History005=Lancelot Add DUC buttons - Date:2017.02.01
+History006=Lancelot Fixed missing Set // Fixed missing EchoWarn10 - Thanks to ied206 PEBakery Auto Syntax Checking Reply 3 http://TheOven.org/index.php?topic=2271.msg24582#msg24582 - Date:2017.11.11
+
+[Cache_SCD_Info_Additional_Plugin]
+IniRead,%ScriptFile%,Main,Selected,%t%
+If,%t%,Equal,True,Begin
+Run,%api%,Cache_SCD_Info_Additional_Plugin_ML,#1,#2,#3,#4,#5,#6,#7,#8,#9
+//-
+If,%pCheckBox1%,Equal,True,Begin
+Set,%t%,0
+If,ExistFile,%pFileBox1%,Retrieve,MD5,%pFileBox1%,%t%
+IniWrite,%ProjectTemp%\%SFName%_Unique.ini,Unique,%Plugin_FName_Sub%_|_pFileBox1,%t%
+End
+If,%pCheckBox2%,Equal,True,Begin
+Set,%t%,0
+If,ExistFile,%pFileBox2%,Retrieve,MD5,%pFileBox2%,%t%
+IniWrite,%ProjectTemp%\%SFName%_Unique.ini,Unique,%Plugin_FName_Sub%_|_pFileBox2,%t%
+End
+If,%pCheckBox3%,Equal,True,Begin
+Set,%t%,0
+If,ExistFile,%pFileBox3%,Retrieve,MD5,%pFileBox3%,%t%
+IniWrite,%ProjectTemp%\%SFName%_Unique.ini,Unique,%Plugin_FName_Sub%_|_pFileBox3,%t%
+End
+If,%pCheckBox4%,Equal,True,Begin
+Set,%t%,0
+If,ExistFile,%pFileBox4%,Retrieve,MD5,%pFileBox4%,%t%
+IniWrite,%ProjectTemp%\%SFName%_Unique.ini,Unique,%Plugin_FName_Sub%_|_pFileBox4,%t%
+End
+If,%pCheckBox5%,Equal,True,Begin
+Set,%t%,0
+If,ExistFile,%pFileBox5%,Retrieve,MD5,%pFileBox5%,%t%
+IniWrite,%ProjectTemp%\%SFName%_Unique.ini,Unique,%Plugin_FName_Sub%_|_pFileBox5,%t%
+End
+If,%pCheckBox6%,Equal,True,Begin
+Set,%t%,0
+If,ExistFile,%pFileBox6%,Retrieve,MD5,%pFileBox6%,%t%
+IniWrite,%ProjectTemp%\%SFName%_Unique.ini,Unique,%Plugin_FName_Sub%_|_pFileBox6,%t%
+End
+If,%pCheckBox7%,Equal,True,Begin
+Set,%t%,0
+If,ExistFile,%pFileBox7%,Retrieve,MD5,%pFileBox7%,%t%
+IniWrite,%ProjectTemp%\%SFName%_Unique.ini,Unique,%Plugin_FName_Sub%_|_pFileBox7,%t%
+End
+If,%pCheckBox8%,Equal,True,Begin
+Set,%t%,0
+If,ExistFile,%pFileBox8%,Retrieve,MD5,%pFileBox8%,%t%
+IniWrite,%ProjectTemp%\%SFName%_Unique.ini,Unique,%Plugin_FName_Sub%_|_pFileBox8,%t%
+End
+If,%pCheckBox9%,Equal,True,Begin
+Set,%t%,0
+If,ExistFile,%pFileBox9%,Retrieve,MD5,%pFileBox9%,%t%
+IniWrite,%ProjectTemp%\%SFName%_Unique.ini,Unique,%Plugin_FName_Sub%_|_pFileBox9,%t%
+End
+If,%pCheckBox10%,Equal,True,Begin
+Set,%t%,0
+If,ExistFile,%pFileBox10%,Retrieve,MD5,%pFileBox10%,%t%
+IniWrite,%ProjectTemp%\%SFName%_Unique.ini,Unique,%Plugin_FName_Sub%_|_pFileBox10,%t%
+End
+//-
+Echo,"Cache_SCD_Info_Additional_Plugin - Finish - %Plugin_FName%"
+End
+
+[Variables]
+%b32%=%BootSRC%\Windows\System32
+%i32%=%InstallSRC%\Windows\System32
+%b64%=%BootSRC%\Windows\SysWow64
+%i64%=%InstallSRC%\Windows\SysWow64
+
+[Interface_w7pese]
+pTextLabel_Fullcopy="According packages, you may need to have the Full File Copy (in Copy Files plugin) to operate.",1,1,10,10,510,18,8,Bold
+pTextLabel1="Specify the paths for up to 10 PACKAGES (.cab or .msu) like the example below:",1,1,40,30,385,18,8,Normal
+pCheckBox1=,1,3,10,51,18,18,False
+pFileBox1="C:\Program Files\Windows AIK\Tools\PETools\x86\WinPE_FPs\winpe-hta.cab",1,13,40,50,480,20,file
+pCheckBox2=,1,3,10,81,18,18,False
+pFileBox2="C:\Program Files\Windows AIK\Tools\PETools\x86\WinPE_FPs\en-us\winpe-hta_en-us.cab",1,13,40,80,480,20,file
+pCheckBox3=,1,3,10,111,18,18,False
+pFileBox3="C:\Program Files\Windows AIK\Tools\PETools\x86\WinPE_FPs\winpe-wmi.cab",1,13,40,110,480,20,file
+pCheckBox4=,1,3,10,141,18,18,False
+pFileBox4="C:\Program Files\Windows AIK\Tools\PETools\x86\WinPE_FPs\en-us\winpe-wmi_en-us.cab",1,13,40,140,480,20,file
+pCheckBox5=,1,3,10,171,18,18,False
+pFileBox5="C:\Program Files\Windows AIK\Tools\PETools\x86\WinPE_FPs\winpe-mdac.cab",1,13,40,170,480,20,file
+pCheckBox6=,1,3,10,201,18,18,False
+pFileBox6="C:\Program Files\Windows AIK\Tools\PETools\x86\WinPE_FPs\en-us\winpe-mdac_en-us.cab",1,13,40,200,480,20,file
+pCheckBox7=,1,3,10,231,18,18,False
+pFileBox7="C:\Program Files\Windows AIK\Tools\PETools\x86\WinPE_FPs\winpe-pppoe.cab",1,13,40,230,480,20,file
+pCheckBox8=,1,3,10,261,18,18,False
+pFileBox8="C:\Program Files\Windows AIK\Tools\PETools\x86\WinPE_FPs\en-us\winpe-pppoe_en-us.cab",1,13,40,260,480,20,file
+pCheckBox9=,1,3,10,291,18,18,False
+pFileBox9="C:\Program Files\Windows AIK\Tools\PETools\x86\WinPE_FPs\winpe-scripting.cab",1,13,40,290,480,20,file
+pCheckBox10=,1,3,10,321,18,18,False
+pFileBox10="C:\Program Files\Windows AIK\Tools\PETools\x86\WinPE_FPs\en-us\winpe-scripting_en-us.cab",1,13,40,320,480,20,file
+pRadioGroup1="Integration process",1,14,10,350,180,54,"Show process","Hide process",0
+pCheckBox_Pause="Pause (win7/8)",1,3,210,370,100,18,False
+pCheckBoxDev="Debug Developer message",1,3,350,370,165,18,False
+WebLabel_Plugin="Plugin Page",1,10,338,4,55,18,http://TheOven.org/index.php?board=9
+
+[Interface]
+pTextLabel_Fullcopy="According packages, you may need to have the Full File Copy (in '1 - Copy Files' plugin) to operate.",1,1,10,2,322,26,8,Bold
+pTextLabel1="Specify the paths for up to 10 PACKAGES (.cab or .msu) like the example below:",1,1,14,33,385,18,8,Normal
+pCheckBox1=,1,3,10,51,18,18,False
+pFileBox1="C:\Program Files (x86)\Windows Kits\8.0\Assessment and Deployment Kit\Windows Preinstallation Environment\x86\WinPE_OCs\WinPE-NetFx4.cab",1,13,40,50,480,20,file
+pCheckBox2=,1,3,10,81,18,18,False
+pFileBox2="C:\Program Files (x86)\Windows Kits\8.0\Assessment and Deployment Kit\Windows Preinstallation Environment\x86\WinPE_OCs\en-us\WinPE-NetFx4_en-us.cab",1,13,40,80,480,20,file
+pCheckBox3=,1,3,10,111,18,18,False
+pFileBox3="C:\Program Files (x86)\Windows Kits\8.0\Assessment and Deployment Kit\Windows Preinstallation Environment\x86\WinPE_OCs\WinPE-WMI.cab",1,13,40,110,480,20,file
+pCheckBox4=,1,3,10,141,18,18,False
+pFileBox4="C:\Program Files (x86)\Windows Kits\8.0\Assessment and Deployment Kit\Windows Preinstallation Environment\x86\WinPE_OCs\en-us\WinPE-WMI_en-us.cab",1,13,40,140,480,20,file
+pCheckBox5=,1,3,10,171,18,18,False
+pFileBox5="C:\Program Files (x86)\Windows Kits\8.0\Assessment and Deployment Kit\Windows Preinstallation Environment\x86\WinPE_OCs\WinPE-MDAC.cab",1,13,40,170,480,20,file
+pCheckBox6=,1,3,10,201,18,18,False
+pFileBox6="C:\Program Files (x86)\Windows Kits\8.0\Assessment and Deployment Kit\Windows Preinstallation Environment\x86\WinPE_OCs\en-us\WinPE-MDAC_en-us.cab",1,13,40,200,480,20,file
+pCheckBox7=,1,3,10,231,18,18,False
+pFileBox7="C:\Program Files (x86)\Windows Kits\8.0\Assessment and Deployment Kit\Windows Preinstallation Environment\x86\WinPE_OCs\WinPE-PPPoE.cab",1,13,40,230,480,20,file
+pCheckBox8=,1,3,10,261,18,18,False
+pFileBox8="C:\Program Files (x86)\Windows Kits\8.0\Assessment and Deployment Kit\Windows Preinstallation Environment\x86\WinPE_OCs\en-us\WinPE-PPPoE_en-us.cab",1,13,40,260,480,20,file
+pCheckBox9=,1,3,10,291,18,18,False
+pFileBox9="C:\Program Files (x86)\Windows Kits\8.0\Assessment and Deployment Kit\Windows Preinstallation Environment\x86\WinPE_OCs\WinPE-Scripting.cab",1,13,40,290,480,20,file
+pCheckBox10=,1,3,10,321,18,18,False
+pFileBox10="C:\Program Files (x86)\Windows Kits\8.0\Assessment and Deployment Kit\Windows Preinstallation Environment\x86\WinPE_OCs\en-us\WinPE-Scripting_en-us.cab",1,13,40,320,480,20,file
+pRadioGroup1="Integration process",1,14,10,350,180,54,"Show process","Hide process",0
+pCheckBox_Pause="Pause (win7/8)",1,3,210,370,100,18,False
+pCheckBoxDev="Debug Developer message",1,3,350,370,165,18,False
+WebLabel_Plugin="Plugin Page",1,10,338,4,55,18,http://TheOven.org/index.php?board=9
+Button_Download=,1,8,403,21,24,24,DownloadXXX,DoubleJDesignRavenna3dArrowDown0016016.bmp,False,False,_DownloadXXX_,False,"__DOWNLOAD Plugin"
+Button_Upload=,1,8,403,-1,24,24,UploadXXX,BokehliciaCaptivaSoftwareupload0016016.bmp,False,False,_UploadXXX_,False,"__UPLOAD Plugin (Admins Only)"
+Button_CompareEdit=,1,8,426,-1,24,24,CompareEditXXX,AmperossQetto2Move0016016.bmp,False,False,_CompareEditXXX_,False,"__DOWNLOAD and Compare with an Editor"
+
+[Process]
+If,ExistFile,%ProjectTemp%\Basic_PluginCache_Extract.ini,Echo,"Basic PluginCache"
+If,Not,ExistFile,%ProjectTemp%\Basic_PluginCache_Extract.ini,Run,%ScriptFile%,Process_Normal
+
+[Process_Normal]
+Echo,"Processing %ScriptTitle% ..."
+//If,Not,ExistVar,%OS%,IniRead,%ProjectDir%\script.project,IniVariables,OS,%OS%
+//If,Not,%OS%,Equal,Win7,Exit,"Windows 7 DVD is needed..."
+//If,Not,%OS%,Equal,Win8,Exit,"Windows 8 DVD is needed..."
+If,%pCheckBox1%%pCheckBox2%%pCheckBox3%%pCheckBox4%%pCheckBox5%%pCheckBox6%%pCheckBox7%%pCheckBox8%%pCheckBox9%%pCheckBox10%,Equal,FalseFalseFalseFalseFalseFalseFalseFalseFalseFalse,Exit,"No package selected"
+Call,HostOSVersion,,4x
+//-
+If,%pRadioGroup1%,Equal,0,Set,%OpenHide%,Open
+If,%pRadioGroup1%,Equal,1,Set,%OpenHide%,Hide
+//-
+If,%pCheckBoxDev%,Equal,True,Begin
+RegHiveLoad,Tmp_software,%BootSRC%\Windows\System32\config\Software
+RegHiveLoad,Tmp_System,%BootSRC%\Windows\System32\config\System
+RegHiveLoad,Tmp_Default,%BootSRC%\Windows\System32\config\Default
+RegHiveLoad,Tmp_Components,%BootSRC%\Windows\System32\config\Components
+//-
+Message,"Start adding packages, hive loaded.#$x#$xYou can use Regshot (or others), to capture the registry changes. 1st shot#$x#$xExample for file changes:  Dir /A:-D /B /S *.* >recursive_list1.txt#$xIn batch:  Dir /A:-D /B /S %~dp0*.* >recursive_list1.txt"
+//-
+RegHiveUnLoad,Tmp_Components
+RegHiveUnLoad,Tmp_Default
+RegHiveUnLoad,Tmp_System
+RegHiveUnLoad,Tmp_software
+End
+//-
+If,%OS%%SourceArch%,Equal,Win7x86,Run,%ScriptFile%,Process_Win7x86
+If,%OS%%SourceArch%,Equal,Win7x64,Run,%ScriptFile%,Process_Win7x64
+If,%OS%%SourceArch%,Equal,Win8x86,Run,%ScriptFile%,Process_Win8x86
+If,%OS%%SourceArch%,Equal,Win8x64,Run,%ScriptFile%,Process_Win8x64
+//-
+If,%pCheckBoxDev%,Equal,True,Begin
+RegHiveLoad,Tmp_software,%BootSRC%\Windows\System32\config\Software
+RegHiveLoad,Tmp_System,%BootSRC%\Windows\System32\config\System
+RegHiveLoad,Tmp_Default,%BootSRC%\Windows\System32\config\Default
+RegHiveLoad,Tmp_Components,%BootSRC%\Windows\System32\config\Components
+//-
+Message,"End of adding packages, hive loaded.#$x#$xYou can use Regshot (or others), to capture the registry changes. 2st shot + Compare#$x#$xExample for file changes:  Dir /A:-D /B /S *.* >recursive_list2.txt#$xIn batch:  Dir /A:-D /B /S %~dp0*.* >recursive_list2.txt"
+//-
+RegHiveUnLoad,Tmp_Components
+RegHiveUnLoad,Tmp_Default
+RegHiveUnLoad,Tmp_System
+RegHiveUnLoad,Tmp_software
+End
+//-
+Echo,"Take Ownership of TargetDir, be patient..."
+ShellExecute,Hide,%Tools%\%OSArch%\SetAcl.exe,"-ot #$qfile#$q -on #$q%TargetDir%#$q -rec cont_obj -actn setowner -ownr #$qn:S-1-1-0;s:y#$q"
+If,Not,%ExitCode%,Equal,0,Call,Echo,"SetAcl - NTFS permission on target folder FAIL",Warn
+Echo,"Grant full access to TargetDir, be patient..."
+ShellExecute,Hide,%Tools%\%OSArch%\SetAcl.exe,"-ot #$qfile#$q -on #$q%TargetDir%#$q -rec cont_obj -actn ace -ace #$qn:S-1-1-0;p:full;s:y#$q"
+If,Not,%ExitCode%,Equal,0,Call,Echo,"SetAcl - NTFS permission on target folder FAIL",Warn
+
+[Process_Win7x86]
+Run,%ScriptFile%,CheckAdd-Servicing
+//-
+If,Not,ExistFile,%target_sys%\dism\dism.exe,FileCopy,%b32%\dism.exe,%target_sys%\dism
+If,Not,ExistFile,%target_sys%\dism\%DistLang%\dism.exe.mui,FileCopy,%b32%\%DistLang%\dism.exe.mui,%target_sys%\dism\%DistLang%
+If,Not,ExistFile,%target_sys%\dism\wdscore.dll,FileCopy,%b32%\wdscore.dll,%target_sys%\dism
+If,Not,ExistFile,%target_sys%\dism\wimgapi.dll,FileCopy,%b32%\wimgapi.dll,%target_sys%\dism
+Set,%targetdism%,%target_sys%\dism\dism.exe
+Set,%WorkDir%,%target_sys%\dism
+//-
+If,%pCheckBox_Pause%,Equal,False,Run,%ScriptFile%,AddSelectedPackage
+Else,Run,%ScriptFile%,AddSelectedPause
+
+[Process_Win7x64]
+Run,%ScriptFile%,CheckAdd-Servicing
+//-
+If,Not,ExistFile,%target_sys%\dism\dism.exe,FileCopy,%b32%\dism.exe,%target_sys%\dism
+If,Not,ExistFile,%target_sys%\dism\%DistLang%\dism.exe.mui,FileCopy,%b32%\%DistLang%\dism.exe.mui,%target_sys%\dism\%DistLang%
+If,Not,ExistFile,%target_sys%\dism\wdscore.dll,FileCopy,%b32%\wdscore.dll,%target_sys%\dism
+If,Not,ExistFile,%target_sys%\dism\wimgapi.dll,FileCopy,%b32%\wimgapi.dll,%target_sys%\dism
+If,Not,ExistFile,%target_win%\SysWow64\dism\dism.exe,FileCopy,%i64%\dism.exe,%target_win%\SysWow64\dism
+If,Not,ExistFile,%target_win%\SysWow64\dism\%DistLang%\dism.exe.mui,FileCopy,%i64%\%DistLang%\dism.exe.mui,%target_win%\SysWow64\dism\%DistLang%
+If,Not,ExistFile,%target_win%\SysWow64\dism\wdscore.dll,FileCopy,%i64%\wdscore.dll,%target_win%\SysWow64\dism
+If,Not,ExistFile,%target_win%\SysWow64\dism\wimgapi.dll,FileCopy,%i64%\wimgapi.dll,%target_win%\SysWow64\dism
+If,%SysType%,Equal,x86,Begin
+Set,%targetdism%,%target_win%\SysWow64\dism\dism.exe
+Set,%WorkDir%,%target_win%\SysWow64\dism
+End
+If,%SysType%,Equal,x64,Begin
+Set,%targetdism%,%target_sys%\dism\dism.exe
+Set,%WorkDir%,%target_sys%\dism
+End
+//-
+If,%pCheckBox_Pause%,Equal,False,Run,%ScriptFile%,AddSelectedPackage
+Else,Run,%ScriptFile%,AddSelectedPause
+
+[Process_Win8x86]
+Run,%ScriptFile%,CheckAdd-Servicing
+// Win8: used wimgapi from tools (ADK)
+If,Not,ExistFile,%target_sys%\dism\dism.exe,FileCopy,%b32%\dism.exe,%target_sys%\dism
+If,Not,ExistFile,%target_sys%\dism\%DistLang%\dism.exe.mui,FileCopy,%b32%\%DistLang%\dism.exe.mui,%target_sys%\dism\%DistLang%
+If,Not,ExistFile,%target_sys%\dism\wdscore.dll,FileCopy,%b32%\wdscore.dll,%target_sys%\dism
+If,Not,ExistFile,%target_sys%\dism\wimgapi.dll,FileCopy,%tools%\x86\wimgapi.dll,%target_sys%\dism
+Set,%XP2k3HostOS%,No
+If,%HostOSVersion1%,Equal,5,Set,%XP2k3HostOS%,Yes
+If,%XP2k3HostOS%,Equal,Yes,Begin
+// Under XP it searches mui files in MUI\LangID
+Call,HostOSLang
+If,Not,ExistDir,%target_sys%\dism\MUI\%HostOSLang%,DirMake,%target_sys%\dism\MUI\%HostOSLang%
+FileCopy,%target_sys%\dism\%DistLang%\*,%target_sys%\dism\MUI\%HostOSLang%
+// Keep for a manual integration if needed
+//DirDelete,%target_sys%\dism\%DistLang%
+End
+Set,%targetdism%,%target_sys%\dism\dism.exe
+Set,%WorkDir%,%target_sys%\dism
+//-
+If,%pCheckBox_Pause%,Equal,False,Run,%ScriptFile%,AddSelectedPackage
+Else,Run,%ScriptFile%,AddSelectedPause
+// In case sytem hive not unloaded by dism
+If,ExistFile,%tools%\HiveUnload.exe,ShellExecute,Hide,%tools%\HiveUnload.exe,"/HKLM /Target:%target_sys%\config"
+
+[Process_Win8x64]
+Run,%ScriptFile%,CheckAdd-Servicing
+// Win8: used wimgapi from tools (ADK)
+If,Not,ExistFile,%target_sys%\dism\dism.exe,FileCopy,%b32%\dism.exe,%target_sys%\dism
+If,Not,ExistFile,%target_sys%\dism\%DistLang%\dism.exe.mui,FileCopy,%b32%\%DistLang%\dism.exe.mui,%target_sys%\dism\%DistLang%
+If,Not,ExistFile,%target_sys%\dism\wdscore.dll,FileCopy,%b32%\wdscore.dll,%target_sys%\dism
+If,Not,ExistFile,%target_sys%\dism\wimgapi.dll,FileCopy,%tools%\x64\wimgapi.dll,%target_sys%\dism
+If,Not,ExistFile,%target_win%\SysWow64\dism\dism.exe,FileCopy,%i64%\dism.exe,%target_win%\SysWow64\dism
+If,Not,ExistFile,%target_win%\SysWow64\dism\%DistLang%\dism.exe.mui,FileCopy,%i64%\%DistLang%\dism.exe.mui,%target_win%\SysWow64\dism\%DistLang%
+If,Not,ExistFile,%target_win%\SysWow64\dism\wdscore.dll,FileCopy,%i64%\wdscore.dll,%target_win%\SysWow64\dism
+If,Not,ExistFile,%target_win%\SysWow64\dism\wimgapi.dll,FileCopy,%tools%\x86\wimgapi.dll,%target_win%\SysWow64\dism
+Set,%XP2k3HostOS%,No
+If,%HostOSVersion1%,Equal,5,Set,%XP2k3HostOS%,Yes
+If,%SysType%,Equal,x86,Begin
+If,%XP2k3HostOS%,Equal,Yes,Begin
+// Under XP it searches mui files in MUI\LangID
+Call,HostOSLang
+If,Not,ExistDir,%target_win%\SysWow64\dism\MUI\%HostOSLang%,DirMake,%target_win%\SysWow64\dism\MUI\%HostOSLang%
+FileCopy,%target_win%\SysWow64\dism\%DistLang%\*,%target_win%\SysWow64\dism\MUI\%HostOSLang%
+// Keep for a manual integration if needed
+//DirDelete,%target_win%\SysWow64\dism\%DistLang%
+End
+Set,%targetdism%,%target_win%\SysWow64\dism\dism.exe
+Set,%WorkDir%,%target_win%\SysWow64\dism
+End
+If,%SysType%,Equal,x64,Begin
+If,%XP2k3HostOS%,Equal,Yes,Begin
+Call,HostOSLang
+If,Not,ExistDir,%target_sys%\dism\MUI\%HostOSLang%,DirMake,%target_sys%\dism\MUI\%HostOSLang%
+FileCopy,%target_sys%\dism\%DistLang%\*,%target_sys%\dism\MUI\%HostOSLang%
+// Keep for a manual integration if needed
+//DirDelete,%target_sys%\dism\%DistLang%
+End
+Set,%targetdism%,%target_sys%\dism\dism.exe
+Set,%WorkDir%,%target_sys%\dism
+End
+//-
+If,%pCheckBox_Pause%,Equal,False,Run,%ScriptFile%,AddSelectedPackage
+Else,Run,%ScriptFile%,AddSelectedPause
+// In case sytem hive not unloaded by dism
+If,ExistFile,%tools%\HiveUnload.exe,ShellExecute,Hide,%tools%\HiveUnload.exe,"/HKLM /Target:%target_sys%\config"
+
+[AddSelectedPackage]
+If,%pCheckBox1%,Equal,True,Run,%ScriptFile%,AddPackage,%pFileBox1%
+If,%pCheckBox2%,Equal,True,Run,%ScriptFile%,AddPackage,%pFileBox2%
+If,%pCheckBox3%,Equal,True,Run,%ScriptFile%,AddPackage,%pFileBox3%
+If,%pCheckBox4%,Equal,True,Run,%ScriptFile%,AddPackage,%pFileBox4%
+If,%pCheckBox5%,Equal,True,Run,%ScriptFile%,AddPackage,%pFileBox5%
+If,%pCheckBox6%,Equal,True,Run,%ScriptFile%,AddPackage,%pFileBox6%
+If,%pCheckBox7%,Equal,True,Run,%ScriptFile%,AddPackage,%pFileBox7%
+If,%pCheckBox8%,Equal,True,Run,%ScriptFile%,AddPackage,%pFileBox8%
+If,%pCheckBox9%,Equal,True,Run,%ScriptFile%,AddPackage,%pFileBox9%
+If,%pCheckBox10%,Equal,True,Run,%ScriptFile%,AddPackage,%pFileBox10%
+
+[AddPackage]
+Set,%Package%,#1
+If,ExistFile,%Package%,Begin
+StrFormat,FILENAME,%Package%,%FileName%
+Echo,"Add %FileName% package ..."
+ShellExecute,%OpenHide%,%targetdism%,"/image:#$q%TargetDir%#$q /Add-Package /PackagePath:#$q%Package%#$q",%WorkDir%
+Echo,"Add %FileName% package return : %ExitCode%"
+Wait,1
+End
+Else,Echo,"The selected package does not exist",Warn
+
+[AddSelectedPause]
+If,%pCheckBox1%,Equal,True,Run,%ScriptFile%,AddPackagePause,%pFileBox1%
+If,%pCheckBox2%,Equal,True,Run,%ScriptFile%,AddPackagePause,%pFileBox2%
+If,%pCheckBox3%,Equal,True,Run,%ScriptFile%,AddPackagePause,%pFileBox3%
+If,%pCheckBox4%,Equal,True,Run,%ScriptFile%,AddPackagePause,%pFileBox4%
+If,%pCheckBox5%,Equal,True,Run,%ScriptFile%,AddPackagePause,%pFileBox5%
+If,%pCheckBox6%,Equal,True,Run,%ScriptFile%,AddPackagePause,%pFileBox6%
+If,%pCheckBox7%,Equal,True,Run,%ScriptFile%,AddPackagePause,%pFileBox7%
+If,%pCheckBox8%,Equal,True,Run,%ScriptFile%,AddPackagePause,%pFileBox8%
+If,%pCheckBox9%,Equal,True,Run,%ScriptFile%,AddPackagePause,%pFileBox9%
+If,%pCheckBox10%,Equal,True,Run,%ScriptFile%,AddPackagePause,%pFileBox10%
+
+[AddPackagePause]
+Set,%Package%,#1
+If,ExistFile,%Package%,Begin
+StrFormat,FILENAME,%Package%,%FileName%
+Set,%w%,%projecttemp%\AddGetPackage.cmd
+If,ExistFile,%w%,ShellExecute,Hide,cmd.exe,"/C del /q /f #$q%w%#$q&del /q /f /A:R /A:H /A:S /A:A #$q%w%#$q"
+If,ExistFile,%w%,Call,Echo,"FILE %w% NOT DELETED",Warn
+If,ExistFile,%w%,Exit,"FILE NOT DELETED"
+FileCreateBlank,%w%
+TXTAddLine,%w%,"@Echo Off",Append
+TXTAddLine,%w%,"Echo=== Add %FileName% package in the image ===",Append
+TXTAddLine,%w%,"#$q%targetdism%#$q /image:#$q%TargetDir%#$q /Add-Package /PackagePath:#$q%Package%#$q",Append
+TXTAddLine,%w%,"Echo.",Append
+//TXTAddLine,%w%,"Echo=== Displays basic information about all packages in the image ===",Append
+//TXTAddLine,%w%,"#$q%targetdism%#$q /image:#$q%TargetDir%#$q /Get-Packages /Format:Table",Append
+TXTAddLine,%w%,"Pause",Append
+Shellexecute,Open,%w%,,%WorkDir%
+//Shellexecute,Open,cmd.exe,"/K #$q%targetdism%#$q /image:%TargetDir% /Add-Package /PackagePath:%Package%",%WorkDir%
+//Shellexecute,Open,cmd.exe,"/K #$q%targetdism%#$q /image:%TargetDir% /Get-Packages /Format:Table",%WorkDir%
+End
+Else,Echo,"The selected package does not exist",Warn
+
+[Distlang_Package]
+Set,%Package%,#1
+StrFormat,PATH,%Package%,%Path%
+StrFormat,FILENAME,%Package%,%FileName%
+StrFormat,EXT,%Package%,%Ext%
+StrFormat,LEN,%Ext%,%LenExt%
+StrFormat,RTrim,%FileName%,%LenExt%,%FileNameS%
+Set,%FileNameLang%,%FileNameS%_%distlang%%Ext%
+Set,%PackageLang%,%Path%%distlang%\%FileNameS%_%distlang%%Ext%
+
+[CheckAdd-Servicing]
+//-- Servicing (DISM /PEIMG) required for drivers integration
+If,Not,ExistDir,%target_win%\servicing,Begin
+Echo,"Processing Servicing file copy..."
+DirMake,%target_win%\servicing
+FileCopy,%BootSRC%\Windows\servicing\*,%target_win%\servicing
+End
+If,Not,ExistDir,%target_sys%\dism,Begin
+Echo,"Processing Dism file copy..."
+DirMake,%target_sys%\dism
+FileCopy,%b32%\dism\*,%target_sys%\dism
+End
+If,%SourceArch%,Equal,x64,If,Not,ExistDir,%target_win%\SysWow64\dism,Begin
+Echo,"Processing WoW64 Dism file copy..."
+DirMake,%target_win%\SysWow64\dism
+FileCopy,%b64%\dism\*,%target_win%\SysWow64\dism
+End
+If,Not,ExistDir,%target_sys%\SMI,Begin
+Echo,"Processing SMI file copy..."
+DirMake,%target_sys%\SMI
+FileCopy,%b32%\SMI\*,%target_sys%\SMI
+End
+
+[AuthorEncoded]
+AddPackage.jpg=2176,2902
+Logo=AddPackage.jpg
+
+[EncodedFile-AuthorEncoded-AddPackage.jpg]
+lines=0
+0=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
+
+[DownloadXXX]
+Call,DownloadXQ
+
+[UploadXXX]
+Call,UploadXQ
+
+[InterfaceEncoded]
+DoubleJDesignRavenna3dArrowDown0016016.bmp=622,830
+BokehliciaCaptivaSoftwareupload0016016.bmp=676,902
+AmperossQetto2Move0016016.bmp=893,1191
+
+[EncodedFile-InterfaceEncoded-DoubleJDesignRavenna3dArrowDown0016016.bmp]
+lines=0
+0=eJzNk09Ik2Ecxw06BF2KqG5ih1EgYZZu7+v7vnu3d++2MpelRFHgQZEaJLVIXSxrW4Wauf7Nwha2rQ7dOgT9IQT1EkQHi+hSHfRSUZrMcp389PjSoUib3vrB9/I8fD78fr+Hxwi0LS+yyi6ySWSVyGqRZUUl1rnr1/3vBfy3+TTxkabuAzx4dp+lsu/G31LRXIrjaCmeVjtfpj4v2jH+YQwpWIYc3orctgUptJkT/UcWxc/1rLXYqYpKqGcklEglcns5DuF48uLhPx2TUxOYIRWlU8PZraOdU1GjMsop4RO9+DucfM1NzuvIfctR3Wai9hq4rvrREybOCy608xpqrAqlQzhObiOSbv2Ln8nPsDvsZ33dSoob1mE7XIIsetAvCUePG63TiRpXUE47rJ0MvRz8wzH9fZqR0SHSj1LUhn2s8a6gMi7hTm7HddmLftHA2aVT2mJjY3Mx7naJ/I/8vHN0Zc5avKNLw+gP4O7bgeuKD73XQyDqI5QM8ur96IJ7jKUiFi8nDDwDezBuCsf1amsnA4Opgm8Y7jtu8UrSj3lnL+btOjypXRg3dpIdThfkjyWCFu9M1eC7tx/vXeFIC8etWjKL4IPdTRZfFqtAvua1PJ5sPWamnuxIpiD/9Plj4ukIh3oaqGk3KG+0sWHfWhp7DvJm7PWS/9FcZmdnF+R+AlbU23p4nNNyyS9Nykn1ckktzkzPC0osS83LSzROcSwqyi93yS/PMzAwNAMivaTcAoZRMPxAGQuEZmPCLu9y8YwcAxMAHjMRfb+2diEBAAAAAgAAAEQAAAAGAgAAAAAAAAEAAAAAAAAAAAAAAA
+
+[EncodedFile-InterfaceEncoded-BokehliciaCaptivaSoftwareupload0016016.bmp]
+lines=0
+0=eJytU21LWmEYbrAfsP0De4H2pRcqRq+0RllUZkav1O+YIH2JPvUhKKJfUE3aaCNQQR3pYWDTPCpBMKUxSczjZDB0Q8UPV/d9L0tdg33YAxfn5nq5n+c85z4vDa8e18l6TnhGeEJ4SnhUpxP+xa1euQD8V5RKJeTzeeRyOWSzWQHXzLH2t1yxWEQikYDb7cXu7iHW1/exuron4Jo51tjD3tqsw3GC+fn36O39hJ6eh8Eae9hb2SMYjGB42Iu+Pv8/gb2cKb+v2fwGAwOBGvhpTzfhg9S1utn8FuW7MplOMDQUwMhIgHrfY3Mzio2Nz1Uce9jLGc5mMhni/WhuPoROt4/6+td3ODpKwGqNV3HsYS9nOBuLfUFLyzG6ulzEnVXB4/kOpzPzB89eznD24iKKxkar9NPrg7fwYG7OBp/vGxRFw+ysDaOjnjudvZzhbDR6iY4OO/V0YHJSxdiYiq2trygUSri+zuLq6ofU29tx0djT2WmTDGdTqbRw3d1O+jYfMTGhYno6TL1zKC+uTaawaDrdHtrajiWjaWn5BgsLfhgMIZoPL6amQlKvrJzT/gUkkwUsL58Lx2hoOJAnZ8rzbLF4YTSG6d18dAY3nfMUg4MK7RmULGu/oUqea4tFqZi/JGZmwnJGgyEg8zU+fip3otcrdJcRusMQ2tt5vl3iVdVU1T9gt6exuMi+exiNZ2htfYempgNBf78LS0sRsPehf1DTfoq2sxPH2tolnTEm4Jo51tLpX1XZG70Y6I54nNNyys9OzcjJTM5MdE4sKMksSwzOTyspTyxKLS3IyU9MMTAwNAMivaTcAoZRMPxAGQuEtmHCLs9kcFmVgQkAJ9URXc7wHxQBAAAAAgAAAEQAAAA8AgAAAAAAAAEAAAAAAAAAAAAAAA
+
+[CompareEditXXX]
+Call,CompareEdit
+
+[EncodedFile-InterfaceEncoded-AmperossQetto2Move0016016.bmp]
+lines=0
+0=eJxtk1lIVFEYxw16agEVzTRncRtt0cx0NCu0QlsgyyCih7Cgh6KFNgQzSsqnFohUEm3FlqmsVGxxxoxSyYkpTcctsiKXtCZ1mPXee878++5o4YMf/DjfnXN+//sdmLt2s3amj7e0RAzhO8kMH7XPv/KfPcF0NXd7RXRg3ufCoDMD+nkFQ8Z5BYOTDBmDCgYNgXlfCudsq4yZzg3I7ToSfMHmVJQBilLi6pT1X097IZdsroBc87GpblB+zwHVNUBJ50JLBAQUSVhQIkJB/X+KBYQWCd4s1XUgKL/3kOz6HTYpQ4scbq9fLsL/ooAV50ahueKE8oYI1TWBoLVcgLKMKJWf6T1XHILv8WaVothyMlwHqG+KmHVJxKHbFnjs49j5zAnf2xyqexLC74hewm6JdE6AmjLDH1BGseVU2E17VeRjIIBmPFhhASQnnneK0Fy2IYaIKHEi9C6DXxmDWscQeY+yKkREPpLfaa+JuO/Wh5C/9bEd4C7INWyxw/bbCmnUiuZeK9bpHDhfY0FkuQvKSo6ohxKiqoCIu+76qEp3XUQtkFDL0DYm2x4863bjdAdwthfY0QKsMYjgYNDTAQVlqJ9yLHwBaB66DdFPhbol9TRLDUPsS4bWMQ+sYw6kVjuwhmbaXzuOvTVWVJtpPkqpbx/DYp0b0a+AmGrBsKhWMMS+AWL1dDcipZGhctiDHSYRbRY3OSIhYdwlYaI4cppdCGsAFr8Q6uNeiU/iacalrxkSyI1ropxGCXEtDGs/cmxq50hrlvCkx+G9W/F3DzQNDLITpxerEhrFE0ntwLK3DInvGLTvGZI/0BytHInka0wce9tpDo+E0gEPwuncUkJ2ljeJuUlGzNcamS3pA8iVkEJO6ieOVR2EmXpaN3Zz7PviQbyJPMrXfgSSjcy+2mQPlv+DaR3CrrSvQGon0caxmry0Lo508tJ7KIf6BLqHvLeyC0j/RpiFnKnfQEa3sDujj1syR4CMn0AmsZ76DSMTvfe3X8C6Pv4n0yzsme4bzO6yB2f1s6NZ/VyX9YPVZU+yhcjqlx5kD9FetyNkqvMXP3mcf3ick3XMLUgtyi8uDkwtKck38s0vSzUwMDQDIr2k3AKGUTDMgRkLhFZixi4vra37hIEJABkJC8Gkai7oAQAAAAIAAAA3AAAAIgMAAAAAAAABAAAAAAAAAAAAAAA
+
